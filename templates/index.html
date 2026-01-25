@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmet Babli Çulcu | AI Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- KURUMSAL TEMA --- */
+        :root {
+            --bg-color: #0f172a;      /* Lacivert-Siyah Arka Plan */
+            --panel-bg: #1e293b;      /* Panel Rengi */
+            --accent: #3b82f6;        /* Kurumsal Mavi */
+            --text-main: #f1f5f9;     /* Kırık Beyaz Yazı */
+            --text-sub: #94a3b8;      /* Soluk Gri Yazı */
+            --user-msg: #2563eb;      /* Mavi Mesaj */
+            --ai-msg: #334155;        /* Gri Mesaj */
+            --border-color: #334155;  /* Kenarlık Rengi */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- ORTAK BUTON STİLİ --- */
+        .btn-dashboard {
+            background: var(--panel-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .btn-dashboard:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        .btn-dashboard i { font-size: 1.1rem; }
+
+        /* --- ÜST PANEL (HEADER) --- */
+        .header {
+            background: rgba(30, 41, 59, 0.95);
+            padding: 15px 30px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        .social-icon {
+            color: var(--text-sub);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+        .social-icon:hover { color: var(--accent); }
+
+        /* --- ORTA KISIM (MAIN CHAT) --- */
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        .chat-box {
+            width: 100%;
+            max-width: 900px;
+            height: 100%;
+            background: var(--panel-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 30px;
+        }
+        /* Scrollbar */
+        #messages::-webkit-scrollbar { width: 8px; }
+        #messages::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+
+        .msg {
+            max-width: 80%;
+            padding: 15px 22px;
+            border-radius: 12px;
+            line-height: 1.6;
+            font-size: 1rem;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .user {
+            align-self: flex-end;
+            background: var(--user-msg);
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+
+        .ai {
+            align-self: flex-start;
+            background: var(--ai-msg);
+            color: var(--text-main);
+            border-bottom-left-radius: 2px;
+        }
+
+        .ai-avatar {
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-weight: 700;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- INPUT ALANI --- */
+        .input-area {
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.5);
+            border-top: 1px solid var(--border-color);
+        }
+        .input-wrapper {
+            background: var(--bg-color);
+            padding: 5px 10px 5px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: border-color 0.3s;
+        }
+        .input-wrapper:focus-within { border-color: var(--accent); }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            padding: 12px 0;
+            outline: none;
+        }
+
+        .send-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .send-btn:hover { background: #2563eb; }
+        .send-btn i { font-size: 1.2rem; }
+
+        /* --- ALT PANEL (FOOTER) --- */
+        .footer {
+            background: rgba(30, 41, 59, 0.95);
+            padding: 15px 30px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .datetime {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .datetime i { color: var(--accent); }
+
+        /* --- SENTIMENT ANALİZ GÖSTERGESİ (Chat içinde) --- */
+        .sentiment-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        .sent-pos { background-color: #22c55e; box-shadow: 0 0 10px #22c55e; }
+        .sent-neg { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; }
+        .sent-neu { background-color: var(--text-sub); }
+
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="#" class="btn-dashboard" onclick="alert('Geçmiş özelliği yakında eklenecek.')">
+            <i class="fas fa-history"></i>
+            <span>Önceki Soruları Göster</span>
+        </a>
+
+        <div class="social-links">
+            <a href="https://instagram.com/" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://linkedin.com/" target="_blank" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/" target="_blank" class="social-icon" title="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="chat-box">
+            <div id="messages">
+                <div class="msg ai">
+                    <span class="ai-avatar">AI ASİSTAN</span>
+                    Merhaba. Ben Ahmet Bey'in dijital asistanıyım. Projeleri, yetkinlikleri veya akademik geçmişi hakkında size nasıl yardımcı olabilirim?
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <input type="text" id="userInput" placeholder="Ahmet Bey hakkında merak ettiklerinizi sorun..." autocomplete="off" onkeypress="handleEnter(event)">
+                    <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+  <footer class="footer">
+        <div style="display: flex; gap: 15px;">
+            <a href="#" class="btn-dashboard" onclick="alert('CV dosyası yakında eklenecek.')">
+                <i class="fas fa-file-pdf"></i>
+                <span>CV İndir</span>
+            </a>
+            
+            <a href="https://github.com/ahmetbabli7" target="_blank" class="btn-dashboard" style="border-color: #22c55e; color: #22c55e;">
+                <i class="fas fa-industry"></i>
+                <span>TrikoPatron Projesi</span>
+            </a>
+        </div>
+
+        <div class="datetime">
+            <i class="far fa-clock"></i>
+            <span id="liveDateTime">...</span>
+        </div>
+    </footer>
+
+    <script>
+        // --- CANLI TARİH SAAT ---
+        function updateDateTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            document.getElementById('liveDateTime').innerText = now.toLocaleDateString('tr-TR', options);
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        // --- MESAJ GÖNDERME ---
+        async function sendMessage() {
+            const input = document.getElementById("userInput");
+            const messages = document.getElementById("messages");
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            // Kullanıcı mesajını ekle
+            messages.innerHTML += `<div class="msg user">${text}</div>`;
+            input.value = "";
+            messages.scrollTop = messages.scrollHeight;
+
+            // Yükleniyor animasyonu
+            const loadingId = "load-" + Date.now();
+            messages.innerHTML += `
+                <div class="msg ai" id="${loadingId}">
+                    <span class="ai-avatar">AI ASİSTAN</span>
+                    <i class="fas fa-circle-notch fa-spin"></i> Yanıt oluşturuluyor...
+                </div>`;
+            messages.scrollTop = messages.scrollHeight;
+
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: text })
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                // Duygu durumuna göre renk belirle
+                let sentClass = "sent-neu";
+                if (data.sentiment === "POSITIVE") sentClass = "sent-pos";
+                else if (data.sentiment === "NEGATIVE") sentClass = "sent-neg";
+
+                // Cevabı ekle
+                messages.innerHTML += `
+                    <div class="msg ai">
+                        <span class="ai-avatar">
+                            AI ASİSTAN <span class="sentiment-indicator ${sentClass}" title="Analiz: ${data.sentiment}"></span>
+                        </span>
+                        ${data.reply}
+                    </div>`;
+                
+                messages.scrollTop = messages.scrollHeight;
+            } catch (err) {
+                document.getElementById(loadingId).innerHTML = `
+                    <span class="ai-avatar" style="color:#ef4444">HATA</span>
+                    Bağlantı hatası oluştu. Lütfen tekrar deneyin.`;
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === "Enter") sendMessage();
+        }
+    </script>
+</body>
+</html>
