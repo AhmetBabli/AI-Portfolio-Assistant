@@ -3,22 +3,30 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-# .env dosyasını yükle
-load_dotenv()
-
 app = Flask(__name__)
 
-# --- API KEY (GÜVENLİ YÖNTEM) ---
-# Şifre artık kodda değil, gizli .env dosyasında!
+# --- API KEY AYARI (HİBRİT YÖNTEM) ---
+# 1. Önce .env dosyasını bulmaya çalış
+basedir = os.path.abspath(os.path.dirname(__file__))
+env_path = os.path.join(basedir, '.env')
+load_dotenv(env_path)
+
+# 2. Anahtarı sistemden iste
 API_KEY = os.getenv("GEMINI_API_KEY")
 
+# 3. EĞER BULAMAZSA (Acil Durum):
 if not API_KEY:
-    print("HATA: API Key bulunamadı! .env dosyasını kontrol et.")
+    # Akhi burası senin bilgisayarında çalışmasını sağlayacak.
+    # GitHub'da bu anahtarı kimse görmez çünkü oraya .env dosyasını attırmadık.
+    # Ama app.py'yi güncellerken burayı açık unutmaman lazım.
+    API_KEY = "AIzaSyA5wTrfWUscyGkiAYmv0hJwBoDCoVEHAl0" 
+    print("⚠️ UYARI: .env okunamadı, YEDEK ANAHTAR kullanılıyor.")
+else:
+    print("✅ BAŞARILI: Güvenli .env anahtarı kullanılıyor.")
 
 genai.configure(api_key=API_KEY)
 
-# ... Kodun geri kalanı aynı kalsın ...
-# (sys_instruction, route'lar vb. elleme)
+# ... Kodun geri kalanı aynı (sys_instruction vb. elleme) ...
 # --- PERSONA VE MÜLAKAT CEVAPLARI ---
 sys_instruction = """
 Sen Ahmet Babli Çulcu'nun "Profesyonel Yapay Zeka Asistanı"sın.
