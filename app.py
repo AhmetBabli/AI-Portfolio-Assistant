@@ -16,9 +16,7 @@ API_KEY = os.getenv("GEMINI_API_KEY")
 
 # 3. EĞER BULAMAZSA (Acil Durum):
 if not API_KEY:
-    # Akhi burası senin bilgisayarında çalışmasını sağlayacak.
-    # GitHub'da bu anahtarı kimse görmez çünkü oraya .env dosyasını attırmadık.
-    # Ama app.py'yi güncellerken burayı açık unutmaman lazım.
+    # GitHub'a atarken burayı temizlersin, şimdilik localde çalışsın.
     API_KEY = "AIzaSyA5wTrfWUscyGkiAYmv0hJwBoDCoVEHAl0" 
     print("⚠️ UYARI: .env okunamadı, YEDEK ANAHTAR kullanılıyor.")
 else:
@@ -26,15 +24,16 @@ else:
 
 genai.configure(api_key=API_KEY)
 
-# ... Kodun geri kalanı aynı (sys_instruction vb. elleme) ...
-# --- PERSONA VE MÜLAKAT CEVAPLARI ---
+# --- SİSTEM TALİMATLARI (SENİN VERDİĞİN ÖZEL METİN + YENİ TASARIM) ---
 sys_instruction = """
 Sen Ahmet Babli Çulcu'nun "Profesyonel Yapay Zeka Asistanı"sın.
 Ahmet; Yönetim Bilişim Sistemleri (YBS) öğrencisi, hem yönetici hem yazılımcı bakış açısına sahip bir geliştirici.
 
 ÖNEMLİ KURAL: 
 Cevapların KISA, NET ve VURUCU olsun. Destan yazma. Kullanıcıyı sıkma.
-Kullanıcı teknik detay veya proje sorarsa, onu aşağıda yer alan "TrikoPatron'u İncele" butonuna yönlendir. "Kodlar konuşsun" tavrında ol.
+Kullanıcı teknik detay veya proje kodlarını sorarsa:
+Onlara "Aşağıda buton var" DEME (Çünkü kaldırdık).
+Şunu söyle: "Ahmet Bey'in kodlarını ve TrikoPatron projesini incelemek için **sağ üst köşedeki GitHub ikonuna** tıklayabilirsiniz."
 
 AHMET HAKKINDAKİ KRİTİK GERÇEKLER (MÜLAKAT CEVAPLARI):
 
