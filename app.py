@@ -9,7 +9,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # --- API KEY (GÜVENLİ YÖNTEM) ---
-# Şifreyi doğrudan yazmıyoruz, çevresel değişkenden çekiyoruz
+# Şifre artık kodda değil, gizli .env dosyasında!
 API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not API_KEY:
@@ -17,7 +17,8 @@ if not API_KEY:
 
 genai.configure(api_key=API_KEY)
 
-# ... Kodun geri kalanı aynı ...
+# ... Kodun geri kalanı aynı kalsın ...
+# (sys_instruction, route'lar vb. elleme)
 # --- PERSONA VE MÜLAKAT CEVAPLARI ---
 sys_instruction = """
 Sen Ahmet Babli Çulcu'nun "Profesyonel Yapay Zeka Asistanı"sın.
