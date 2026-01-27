@@ -32,13 +32,14 @@ if os.path.exists(env_file):
 
 API_KEY = os.getenv("GEMINI_API_KEY")
 
+# --- ESKİ KODU SİL, BUNU YAPIŞTIR ---
+
 if not API_KEY:
-    # Akhi buraya kendi anahtarını yapıştırmayı unutma!
-    API_KEY = "AIzaSyDJjlY9YgpahQ0ptuNyAjsPy5bewPkudRE" 
-    print("⚠️ UYARI: Yedek anahtar kullanılıyor.")
+    # GitHub'da bu satır görünecek, şifren değil. Profesyonel olan budur.
+    print("⚠️ UYARI: API Anahtarı bulunamadı. (.env dosyası eksik)")
+    API_KEY = None
 
-genai.configure(api_key=API_KEY)
-
+    
 # --- GÜNCELLENEN BEYİN (DENGELİ MOD) ---
 sys_instruction = """
 Sen Ahmet Babli Çulcu'nun "Profesyonel Dijital Asistanı" Sırdaş'sın.
