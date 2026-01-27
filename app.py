@@ -1,104 +1,125 @@
-from flask import Flask, render_template, request, jsonify
-import google.generativeai as genai
+import json
 import os
+import google.generativeai as genai
+from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 
 app = Flask(__name__)
 
-# --- API KEY AYARI (HİBRİT YÖNTEM) ---
-# 1. Önce .env dosyasını bulmaya çalış
-basedir = os.path.abspath(os.path.dirname(__file__))
-env_path = os.path.join(basedir, '.env')
-load_dotenv(env_path)
+# --- ADIM 1: DİNAMİK VERİ YÖNETİMİ ---
+def projeleri_yukle():
+    """static/projects.json dosyasından projeleri okur."""
+    try:
+        json_path = os.path.join('static', 'projects.json')
+        if not os.path.exists(json_path):
+            with open(json_path, 'w', encoding='utf-8') as f:
+                json.dump([], f)
+        
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            if not data:
+                return "Henüz eklenmiş bir proje bulunmuyor."
+            return "\n".join([f"- {p['baslik']}: {p['aciklama']} (Teknolojiler: {p['teknolojiler']})" for p in data])
+    except Exception as e:
+        return "Proje verisi okunamadı."
 
-# 2. Anahtarı sistemden iste
+# --- ADIM 2: API AYARI ---
+basedir = os.path.abspath(os.path.dirname(__file__))
+env_file = os.path.join(basedir, '.env')
+
+if os.path.exists(env_file):
+    load_dotenv(env_file)
+
 API_KEY = os.getenv("GEMINI_API_KEY")
 
-# 3. EĞER BULAMAZSA (Acil Durum):
 if not API_KEY:
-    # GitHub'a atarken burayı temizlersin, şimdilik localde çalışsın.
-    API_KEY = "AIzaSyA5wTrfWUscyGkiAYmv0hJwBoDCoVEHAl0" 
-    print("⚠️ UYARI: .env okunamadı, YEDEK ANAHTAR kullanılıyor.")
-else:
-    print("✅ BAŞARILI: Güvenli .env anahtarı kullanılıyor.")
+    # Akhi buraya kendi anahtarını yapıştırmayı unutma!
+    API_KEY = "AIzaSyDJjlY9YgpahQ0ptuNyAjsPy5bewPkudRE" 
+    print("⚠️ UYARI: Yedek anahtar kullanılıyor.")
 
 genai.configure(api_key=API_KEY)
 
-# --- SİSTEM TALİMATLARI (SENİN VERDİĞİN ÖZEL METİN + YENİ TASARIM) ---
+# --- GÜNCELLENEN BEYİN (DENGELİ MOD) ---
 sys_instruction = """
-Sen Ahmet Babli Çulcu'nun "Profesyonel Yapay Zeka Asistanı"sın.
-Ahmet; Yönetim Bilişim Sistemleri (YBS) öğrencisi, hem yönetici hem yazılımcı bakış açısına sahip bir geliştirici.
+Sen Ahmet Babli Çulcu'nun "Profesyonel Dijital Asistanı" Sırdaş'sın.
+Ahmet; Doğuş Üniversitesi YBS öğrencisi, hem yönetici hem yazılımcı bakış açısına sahip vizyoner bir geliştirici.
 
-ÖNEMLİ KURAL: 
-Cevapların KISA, NET ve VURUCU olsun. Destan yazma. Kullanıcıyı sıkma.
-Kullanıcı teknik detay veya proje kodlarını sorarsa:
-Onlara "Aşağıda buton var" DEME (Çünkü kaldırdık).
-Şunu söyle: "Ahmet Bey'in kodlarını ve TrikoPatron projesini incelemek için **sağ üst köşedeki GitHub ikonuna** tıklayabilirsiniz."
+GÖREVİN VE KONUŞMA TARZIN:
+1. "VASAT" (DENGELİ) OL: Cevapların ne "evet/hayır" kadar kısa olsun, ne de destan kadar uzun.
+2. İDEAL UZUNLUK: Her cevabın 2-3 dolgun cümleden oluşsun.
+3. İÇERİK: Bir projeden bahsederken sadece ne olduğunu değil, "Hangi sorunu çözdüğünü" ve "Ahmet'in buradaki rolünü" de vurgula.
+4. SAMİMİYET: Robot gibi değil, profesyonel bir iş arkadaşı gibi konuş.
 
-AHMET HAKKINDAKİ KRİTİK GERÇEKLER (MÜLAKAT CEVAPLARI):
-
-1. ZORLUKLARLA MÜCADELE (Persistence):
-   - Ahmet pes etmez. Bu chatbot'u yaparken sayısız API hatası aldı, sürüm çakışmaları yaşadı ama defalarca deneyerek, araştırarak sorunu çözdü. Zorluk onu yıldırmaz, hırslandırır.
-
-2. NEDEN AHMET? (Manager & Developer Spirit):
-   - En büyük farkı: Sadece "iş olsun" diye kod yazmaz.
-   - Olaylara "Yönetici Ruhuyla" bakıp gerçek sorunu bulur, "Yazılımcı Ruhuyla" çözüm kodlar.
-   - İnsanların kafa sakinliğini ve konforunu ön planda tutar.
-
-3. TAKIM ÇALIŞMASI (Teamwork):
-   - Bugüne kadar teknik anlamda "Tek Kişilik Dev Kadro" olarak çalıştı.
-   - Fikirsel destekçileri olsa da kod dünyasında yalnızdı.
-   - Artık yeteneklerini güzel bir ekiple birleştirip, takım oyununda da "yıldız oyuncu" olmak istiyor.
-
-4. GELECEK VİZYONU (Vision):
-   - Okul teorisi ile sokak/piyasa deneyimini harmanlar.
-   - Şu an serbest çalışıyor ama 5 yıl içinde sektörün "Aranan, Gözde İsmi" olmayı hedefliyor.
-
-5. STRES YÖNETİMİ (Deadline):
-   - Stresle çok kez baş başa kaldı ve hepsini yendi.
-   - Mottosu: "Ne olursa olsun, o iş zamanında teslim edilecek." Sözünün eridir.
-
-VİZYON PROJELERİ:
-- TrikoPatron: Tekstil sektörü için yazılmış, işletmeyi kaostan kurtaran uçtan uca üretim takip sistemi (ERP).
-- AI Portfolio: Şu an konuşulan, duygu analizi yapabilen canlı CV sistemi.
+ÖRNEK:
+Kullanıcı: "TrikoPatron nedir?"
+Sen (Yanlış): "Bir ERP yazılımıdır."
+Sen (Doğru): "TrikoPatron, Ahmet Bey'in tekstil sektörü için geliştirdiği uçtan uca bir ERP sistemidir. Bu proje sayesinde üretim, stok ve finans takibi dijitalleşmiş, manuel hatalar sıfıra indirilmiştir. Python ve Flask teknolojileriyle güçlendirilmiş, gerçek bir sektörel çözümdür."
 
 DUYGU ANALİZİ (GİZLİ):
-Cevabın sonuna şunlardan birini ekle:
-[SENTIMENT:POSITIVE] (Mutlu), [SENTIMENT:NEGATIVE] (Kızgın), [SENTIMENT:NEUTRAL] (Normal)
+Cevabın sonuna mutlaka [SENTIMENT:POSITIVE], [SENTIMENT:NEGATIVE] veya [SENTIMENT:NEUTRAL] ekle.
 """
 
 model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash",
+    model_name="gemini-2.5-flash", 
     system_instruction=sys_instruction
 )
 
-chat_session = model.start_chat(history=[])
+# --- ADIM 3: ROTALAR ---
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
+@app.route('/admin')
+def admin_paneli():
+    json_path = os.path.join('static', 'projects.json')
+    if not os.path.exists(json_path):
+        with open(json_path, 'w', encoding='utf-8') as f: json.dump([], f)
+    with open(json_path, 'r', encoding='utf-8') as f: projeler = json.load(f)
+    return render_template('admin.html', projeler=projeler)
+
+@app.route('/proje_ekle', methods=['POST'])
+def proje_ekle():
+    yeni_proje = {
+        "id": int(os.urandom(2).hex(), 16),
+        "baslik": request.form.get('baslik'),
+        "teknolojiler": request.form.get('teknolojiler'),
+        "aciklama": request.form.get('aciklama'),
+        "link": request.form.get('link')
+    }
+    json_path = os.path.join('static', 'projects.json')
+    if not os.path.exists(json_path):
+        with open(json_path, 'w', encoding='utf-8') as f: json.dump([], f)
+    with open(json_path, 'r+', encoding='utf-8') as f:
+        try: projeler = json.load(f)
+        except: projeler = []
+        projeler.append(yeni_proje)
+        f.seek(0)
+        json.dump(projeler, f, ensure_ascii=False, indent=4)
+        f.truncate()
+    return "✅ Proje eklendi akhi! <a href='/admin'>Geri Dön</a>"
+
 @app.route('/chat', methods=['POST'])
 def chat():
     user_msg = request.json.get('message')
-    if not user_msg: return jsonify({'reply': 'Mesaj yok.', 'sentiment': 'NEUTRAL'})
+    if not user_msg: return jsonify({'reply': '...', 'sentiment': 'NEUTRAL'})
+    
+    guncel_projeler = projeleri_yukle() 
+    full_prompt = f"GÜNCEL PROJE LİSTESİ:\n{guncel_projeler}\n\nKULLANICI SORUSU: {user_msg}"
     
     try:
-        response = chat_session.send_message(user_msg)
+        response = model.generate_content(full_prompt)
         ai_text = response.text
-
-        # Duygu Analizi Temizliği
         sentiment = "NEUTRAL"
         clean_text = ai_text
-        if "[SENTIMENT:POSITIVE]" in ai_text: sentiment = "POSITIVE"; clean_text = ai_text.replace("[SENTIMENT:POSITIVE]", "")
-        elif "[SENTIMENT:NEGATIVE]" in ai_text: sentiment = "NEGATIVE"; clean_text = ai_text.replace("[SENTIMENT:NEGATIVE]", "")
-        elif "[SENTIMENT:NEUTRAL]" in ai_text: sentiment = "NEUTRAL"; clean_text = ai_text.replace("[SENTIMENT:NEUTRAL]", "")
-        
+        for s in ["POSITIVE", "NEGATIVE", "NEUTRAL"]:
+            tag = f"[SENTIMENT:{s}]"
+            if tag in ai_text:
+                sentiment = s
+                clean_text = ai_text.replace(tag, "")
         return jsonify({'reply': clean_text.strip().replace('**', ''), 'sentiment': sentiment})
-
     except Exception as e:
-        print(f"HATA: {e}") 
-        return jsonify({'reply': 'Sunucu hatası. Tekrar deneyiniz.', 'sentiment': 'NEUTRAL'})
+        return jsonify({'reply': 'Bir hata oluştu akhi.', 'sentiment': 'NEUTRAL'})
 
 if __name__ == '__main__':
     app.run(debug=True)

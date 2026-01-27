@@ -206,7 +206,6 @@
         }
         .datetime i { color: var(--accent); }
 
-        /* --- SENTIMENT ANALİZ GÖSTERGESİ (Chat içinde) --- */
         .sentiment-indicator {
             display: inline-block;
             width: 10px;
@@ -223,15 +222,15 @@
 <body>
 
     <header class="header">
-        <a href="#" class="btn-dashboard" onclick="alert('Geçmiş özelliği yakında eklenecek.')">
+        <a href="#" class="btn-dashboard" onclick="alert('Mesaj geçmişi özelliği çok yakında yayında!')">
             <i class="fas fa-history"></i>
             <span>Önceki Soruları Göster</span>
         </a>
 
         <div class="social-links">
-            <a href="https://instagram.com/" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="https://linkedin.com/" target="_blank" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            <a href="https://github.com/" target="_blank" class="social-icon" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://instagram.com/ahmetbabli7" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/ahmetbabli7/" target="_blank" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/AhmetBabli" target="_blank" class="social-icon" title="GitHub"><i class="fab fa-github"></i></a>
         </div>
     </header>
 
@@ -240,7 +239,7 @@
             <div id="messages">
                 <div class="msg ai">
                     <span class="ai-avatar">AI ASİSTAN</span>
-                    Merhaba. Ben Ahmet Bey'in dijital asistanıyım. Projeleri, yetkinlikleri veya akademik geçmişi hakkında size nasıl yardımcı olabilirim?
+                    Merhaba! Ben Ahmet Bey'in dijital asistanı Sırdaş. TrikoPatron ERP gibi projeleri, YBS odaklı akademik geçmişi veya Full Stack yetkinlikleri hakkında size nasıl yardımcı olabilirim?
                 </div>
             </div>
 
@@ -253,8 +252,8 @@
         </section>
     </main>
 
-  <footer class="footer">
-        <a href="#" class="btn-dashboard" onclick="alert('CV dosyası güncelleniyor, yakında eklenecek.')">
+    <footer class="footer">
+        <a href="{{ url_for('static', filename='Ahmet_Babli_Culcu_CV.pdf') }}" download class="btn-dashboard">
             <i class="fas fa-file-pdf"></i>
             <span>CV İndir</span>
         </a>
@@ -266,7 +265,6 @@
     </footer>
 
     <script>
-        // --- CANLI TARİH SAAT ---
         function updateDateTime() {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -275,7 +273,6 @@
         setInterval(updateDateTime, 1000);
         updateDateTime();
 
-        // --- MESAJ GÖNDERME ---
         async function sendMessage() {
             const input = document.getElementById("userInput");
             const messages = document.getElementById("messages");
@@ -283,17 +280,15 @@
 
             if (!text) return;
 
-            // Kullanıcı mesajını ekle
             messages.innerHTML += `<div class="msg user">${text}</div>`;
             input.value = "";
             messages.scrollTop = messages.scrollHeight;
 
-            // Yükleniyor animasyonu
             const loadingId = "load-" + Date.now();
             messages.innerHTML += `
                 <div class="msg ai" id="${loadingId}">
                     <span class="ai-avatar">AI ASİSTAN</span>
-                    <i class="fas fa-circle-notch fa-spin"></i> Yanıt oluşturuluyor...
+                    <i class="fas fa-circle-notch fa-spin"></i> Düşünüyorum...
                 </div>`;
             messages.scrollTop = messages.scrollHeight;
 
@@ -307,16 +302,14 @@
                 const data = await response.json();
                 document.getElementById(loadingId).remove();
 
-                // Duygu durumuna göre renk belirle
                 let sentClass = "sent-neu";
                 if (data.sentiment === "POSITIVE") sentClass = "sent-pos";
                 else if (data.sentiment === "NEGATIVE") sentClass = "sent-neg";
 
-                // Cevabı ekle
                 messages.innerHTML += `
                     <div class="msg ai">
                         <span class="ai-avatar">
-                            AI ASİSTAN <span class="sentiment-indicator ${sentClass}" title="Analiz: ${data.sentiment}"></span>
+                            AI ASİSTAN <span class="sentiment-indicator ${sentClass}" title="Duygu Analizi: ${data.sentiment}"></span>
                         </span>
                         ${data.reply}
                     </div>`;
@@ -325,7 +318,7 @@
             } catch (err) {
                 document.getElementById(loadingId).innerHTML = `
                     <span class="ai-avatar" style="color:#ef4444">HATA</span>
-                    Bağlantı hatası oluştu. Lütfen tekrar deneyin.`;
+                    Bağlantı kesildi, lütfen tekrar dene akhi.`;
             }
         }
 

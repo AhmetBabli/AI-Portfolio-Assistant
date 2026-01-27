@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "baslik": "TrikoPatron ERP Sistemi",
+        "teknolojiler": "Python, Flask",
+        "aciklama": "Tekstil sektörü için üretim, stok ve finans takip yazılımı. Manuel süreçleri %100 dijitalleştirdi.",
+        "link": "github.com/AhmetBabli"
+    },
+    {
+        "id": 2,
+        "baslik": "AI Portfolio Assistant",
+        "teknolojiler": "Google Gemini API, Flask",
+        "aciklama": "Kullanıcı duygu analizine göre etkileşim kuran akıllı portfolyo asistanı.",
+        "link": "github.com/AhmetBabli"
+    }
+]
