@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ahmet Babli Çulcu | AI Portfolio</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         /* --- KURUMSAL TEMA --- */
         :root {
@@ -28,6 +31,9 @@
             display: flex;
             flex-direction: column;
         }
+
+        /* Bootstrap Link Stillerini Sıfırla (Çatışmayı önlemek için) */
+        a { text-decoration: none; }
 
         /* --- ORTAK BUTON STİLİ --- */
         .btn-dashboard {
@@ -233,7 +239,6 @@
         }
         .datetime i { color: var(--accent); }
 
-        /* Duygu Göstergesi (Opsiyonel - Şimdilik gizli kalabilir) */
         .sentiment-indicator {
             display: inline-block;
             width: 10px;
@@ -245,17 +250,36 @@
         .sent-neg { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; }
         .sent-neu { background-color: var(--text-sub); }
 
+        /* Yan Menü (Offcanvas) Özel Stili */
+        .offcanvas { background-color: var(--panel-bg); color: var(--text-main); }
+        .btn-close-white { filter: invert(1); }
+        .btn-outline-custom {
+            border: 1px solid var(--border-color);
+            color: var(--text-sub);
+            text-align: left;
+            width: 100%;
+            background: transparent;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .btn-outline-custom:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
     </style>
 </head>
 <body>
 
     <header class="header">
-        <a href="#" class="btn-dashboard" onclick="alert('Mesaj geçmişi özelliği çok yakında yayında!')">
-            <i class="fas fa-history"></i>
-            <span class="d-none d-md-inline">Önceki Sorular</span>
-        </a>
+        <button class="btn-dashboard" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+            <i class="fas fa-rocket"></i>
+            <span class="d-none d-md-inline">Hızlı Menü</span>
+        </button>
 
-      <div class="social-links">
+        <div class="social-links">
             <a href="/yonetici" class="admin-login-btn" title="Yönetici Girişi">
                 <i class="fas fa-user-shield"></i>
                 <span class="admin-text ms-2 d-none d-md-inline">Yönetici</span>
@@ -267,12 +291,52 @@
         </div>
     </header>
 
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title text-white">
+                <i class="fas fa-robot me-2 text-primary"></i>Sırdaş'a Sor
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <p class="text-muted small mb-4">Aşağıdaki konulardan birini seçerek sohbeti başlatabilirsiniz:</p>
+
+            <div class="d-grid gap-3">
+                <button onclick="hizliSor('Ahmet Babli Çulcu kimdir, eğitim ve kariyer geçmişinden bahseder misin?')" class="btn btn-outline-custom">
+                    <i class="fas fa-user-graduate me-2 text-info"></i>Ahmet Kimdir?
+                </button>
+
+                <button onclick="hizliSor('Ahmet\'in geliştirdiği projeler nelerdir? Özellikle TrikoPatron ve AI Portfolyo hakkında bilgi ver.')" class="btn btn-outline-custom">
+                    <i class="fas fa-code-branch me-2 text-warning"></i>Projeleri Listele
+                </button>
+
+                <button onclick="hizliSor('Ahmet hangi yazılım dillerini ve teknolojileri kullanıyor? (Python, Flask, SQL vs.)')" class="btn btn-outline-custom">
+                    <i class="fas fa-laptop-code me-2 text-success"></i>Teknik Yetenekler
+                </button>
+
+                <button onclick="hizliSor('Ahmet\'e iş teklifi veya proje için nasıl ulaşabilirim? İletişim bilgileri nedir?')" class="btn btn-outline-custom">
+                    <i class="fas fa-envelope me-2 text-light"></i>İletişim Bilgileri
+                </button>
+                
+                <button onclick="hizliSor('TrikoPatron ERP projesi ne işe yarıyor? Hangi sorunu çözüyor?')" class="btn btn-outline-custom">
+                    <i class="fas fa-tshirt me-2 text-primary"></i>TrikoPatron Detay
+                </button>
+            </div>
+
+            <hr class="border-secondary my-4">
+            
+            <div class="text-center text-muted small opacity-50">
+                <p>Google Gemini AI Altyapısı<br>v2.0 Stable</p>
+            </div>
+        </div>
+    </div>
+
     <main class="main-container">
         <section class="chat-box">
             <div id="messages">
                 <div class="msg ai">
                     <span class="ai-avatar">AI ASİSTAN</span>
-                    Merhaba! Ben Ahmet Bey'in dijital asistanı Sırdaş. TrikoPatron ERP gibi projeleri, YBS odaklı akademik geçmişi veya Full Stack yetkinlikleri hakkında size nasıl yardımcı olabilirim?
+                    Merhaba! Ben Ahmet Bey'in dijital asistanı Sırdaş. Sol üstteki <b>Hızlı Menü</b>'yü kullanarak örnek sorular sorabilir veya aşağıdan yazabilirsiniz. Size nasıl yardımcı olayım?
                 </div>
             </div>
 
@@ -297,6 +361,8 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         function updateDateTime() {
             const now = new Date();
@@ -305,6 +371,23 @@
         }
         setInterval(updateDateTime, 1000);
         updateDateTime();
+
+        // --- YENİ EKLENEN HIZLI SORU FONKSİYONU ---
+        function hizliSor(soru) {
+            // 1. Yan menüyü kapat
+            var myOffcanvas = document.getElementById('sidebar');
+            var bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas);
+            if (bsOffcanvas) {
+                bsOffcanvas.hide();
+            }
+
+            // 2. Soruyu input kutusuna yaz ve gönder
+            const inputField = document.getElementById('userInput');
+            if(inputField) {
+                inputField.value = soru;
+                sendMessage(); // Mevcut gönderme fonksiyonunu çağır
+            }
+        }
 
         async function sendMessage() {
             const input = document.getElementById("userInput");
@@ -337,15 +420,10 @@
                 const data = await response.json();
                 document.getElementById(loadingId).remove();
 
-                // --- DÜZELTME BURADA YAPILDI ---
-                // Python'dan artık "sentiment" gelmediği için varsayılan atıyoruz
-                // Ve "reply" yerine "response" kullanıyoruz.
-
-                let sentClass = "sent-neu"; // Varsayılan nötr
+                let sentClass = "sent-neu"; 
                 if (data.sentiment === "POSITIVE") sentClass = "sent-pos";
                 else if (data.sentiment === "NEGATIVE") sentClass = "sent-neg";
 
-                // Eğer backend hata mesajı dönerse veya response boşsa kontrol et
                 const botReply = data.response || "Bir hata oluştu, cevap alınamadı.";
 
                 messages.innerHTML += `
@@ -358,7 +436,6 @@
 
                 messages.scrollTop = messages.scrollHeight;
             } catch (err) {
-                // Eğer loading elementi hala varsa sil
                 const loader = document.getElementById(loadingId);
                 if(loader) loader.remove();
 

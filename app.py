@@ -7,9 +7,9 @@ from functools import wraps
 app = Flask(__name__)
 app.secret_key = "AhmetBabli_Gizli_Anahtar"
 
-# --- KULLANICI AYARLARI ---
+# --- KULLANICI ADI VE ŞİFRE ---
 ADMIN_USER = "ahmetbabli7"
-ADMIN_PASS = "13868182894" # Senin şifren
+ADMIN_PASS = "13868182894"
 
 # --- DOSYA YOLLARI ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -19,8 +19,8 @@ PROJECTS_FILE = os.path.join(STATIC_FOLDER, 'projects.json')
 if not os.path.exists(STATIC_FOLDER):
     os.makedirs(STATIC_FOLDER)
 
-# 👇 API ANAHTARI (DİKKAT: GitHub'a atarken burayı silip boş bırakacaksın!) 👇
-API_KEY = ""
+# 👇 API ANAHTARIN (Senin istediğin gibi açıkta bıraktım) 👇
+API_KEY = "AIzaSyB6tdcFxNirbvU441ROK5rtM5tQ5p6iNwo"
 
 if API_KEY:
     try:
@@ -35,7 +35,7 @@ Ahmet YBS öğrencisidir. Projeleri ve yetenekleri hakkında kısa, net ve profe
 Duygu analizi yapma.
 """
 
-# --- GÜVENLİK ---
+# --- GÜVENLİK KİLİDİ ---
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -44,14 +44,26 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# --- YARDIMCI FONKSİYONLAR ---
+
+# --- YARDIMCI FONKSİYONLAR (DÜZELTİLMİŞ HALİ) ---
 def projeleri_yukle():
     try:
-        if not os.path.exists(PROJECTS_FILE): return "Proje yok."
+        if not os.path.exists(PROJECTS_FILE): return "Henüz proje girilmemiş."
         with open(PROJECTS_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            return "\n".join([f"- {p['baslik']}: {p['aciklama']}" for p in data])
-    except: return "Veri okunamadı."
+
+            # AI'a gidecek metni hazırlıyoruz (Artık Teknolojileri de içeriyor!)
+            metin = ""
+            for p in data:
+                teknoloji = p.get('teknolojiler', 'Belirtilmedi')
+                metin += f"- PROJE ADI: {p['baslik']}\n"
+                metin += f"  KULLANILAN TEKNOLOJİLER: {teknoloji}\n"
+                metin += f"  AÇIKLAMA: {p['aciklama']}\n"
+                metin += f"  LİNK: {p.get('link', 'Yok')}\n\n"
+
+            return metin
+    except Exception as e:
+        return f"Veri okunurken hata oluştu: {e}"
 
 # --- SAYFALAR ---
 @app.route('/')
@@ -63,11 +75,12 @@ def login():
     if request.method == 'POST':
         kadi = request.form.get('username')
         sifre = request.form.get('password')
+
         if kadi == ADMIN_USER and sifre == ADMIN_PASS:
             session['logged_in'] = True
             return redirect(url_for('admin_paneli'))
         else:
-            return render_template('login.html', error="Hatalı kullanıcı adı veya şifre!")     
+            return render_template('login.html', error="Hatalı kullanıcı adı veya şifre!")
     return render_template('login.html')
 
 @app.route('/logout')
@@ -76,11 +89,11 @@ def logout():
     return redirect(url_for('home'))
 
 @app.route('/yonetici')
-@login_required 
+@login_required
 def admin_paneli():
     if not os.path.exists(PROJECTS_FILE):
         with open(PROJECTS_FILE, 'w', encoding='utf-8') as f: json.dump([], f)
-    with open(PROJECTS_FILE, 'r', encoding='utf-8') as f: 
+    with open(PROJECTS_FILE, 'r', encoding='utf-8') as f:
         projeler = json.load(f)
     return render_template('admin.html', projeler=projeler)
 
@@ -88,6 +101,7 @@ def admin_paneli():
 @login_required
 def proje_ekle():
     try:
+        # YENİ EKLENEN KISIM: Her projeye rastgele bir sayı (ID) veriyoruz ki silebilelim
         yeni_proje = {
             "id": int(os.urandom(4).hex(), 16),
             "baslik": request.form.get('baslik'),
@@ -108,26 +122,33 @@ def proje_ekle():
     except Exception as e:
         return f"Hata: {e}"
 
+# --- YENİ EKLENEN SİLME FONKSİYONU ---
 @app.route('/proje_sil/<int:id>')
 @login_required
 def proje_sil(id):
     if not os.path.exists(PROJECTS_FILE):
         return redirect(url_for('admin_paneli'))
+
     with open(PROJECTS_FILE, 'r+', encoding='utf-8') as f:
-        try: 
+        try:
             projeler = json.load(f)
+            # ID'si eşleşmeyenleri yeni listeye al (yani eşleşeni at)
             yeni_liste = [p for p in projeler if p.get('id') != id]
+
             f.seek(0)
             json.dump(yeni_liste, f, ensure_ascii=False, indent=4)
             f.truncate()
         except: pass
+
     return redirect(url_for('admin_paneli'))
 
 @app.route('/chat', methods=['POST'])
 def chat():
     user_msg = request.json.get('message')
     if not user_msg: return jsonify({'response': '...', 'reply': '...'})
+
     full_prompt = f"PROJELER:\n{projeleri_yukle()}\n\nSORU: {user_msg}"
+
     try:
         model = genai.GenerativeModel("gemini-2.5-flash", system_instruction=sys_instruction)
         response = model.generate_content(full_prompt)
