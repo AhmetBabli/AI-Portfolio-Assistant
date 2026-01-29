@@ -1,3 +1,18 @@
-.env
+# Python'un ürettiği gereksiz klasörler
 __pycache__/
 *.pyc
+
+# Gizli ortam dosyaları (Varsa gitmesin)
+.env
+.venv
+env/
+venv/
+
+# Eğer oluşturursan gizli anahtar dosyası
+sirlar.py
+
+# Veritabanı (Bunu ekle ki yerel testlerin GitHub'a gidip sunucuyu karıştırmasın)
+static/projects.json
+
+# VS Code ayarları (Gerek yok)
+.vscode/

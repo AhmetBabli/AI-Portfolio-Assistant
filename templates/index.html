@@ -64,6 +64,7 @@
         .social-links {
             display: flex;
             gap: 15px;
+            align-items: center;
         }
         .social-icon {
             color: var(--text-sub);
@@ -72,6 +73,32 @@
             text-decoration: none;
         }
         .social-icon:hover { color: var(--accent); }
+
+        /* --- ADMIN GİRİŞ BUTONU STİLİ --- */
+        .admin-login-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-main);
+            border: 1px solid transparent;
+            margin-right: 10px;
+        }
+
+        .admin-login-btn:hover {
+            background-color: var(--accent);
+            color: white !important;
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+
+        .admin-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
 
         /* --- ORTA KISIM (MAIN CHAT) --- */
         .main-container {
@@ -206,6 +233,7 @@
         }
         .datetime i { color: var(--accent); }
 
+        /* Duygu Göstergesi (Opsiyonel - Şimdilik gizli kalabilir) */
         .sentiment-indicator {
             display: inline-block;
             width: 10px;
@@ -224,10 +252,15 @@
     <header class="header">
         <a href="#" class="btn-dashboard" onclick="alert('Mesaj geçmişi özelliği çok yakında yayında!')">
             <i class="fas fa-history"></i>
-            <span>Önceki Soruları Göster</span>
+            <span class="d-none d-md-inline">Önceki Sorular</span>
         </a>
 
-        <div class="social-links">
+      <div class="social-links">
+            <a href="/yonetici" class="admin-login-btn" title="Yönetici Girişi">
+                <i class="fas fa-user-shield"></i>
+                <span class="admin-text ms-2 d-none d-md-inline">Yönetici</span>
+            </a>
+
             <a href="https://instagram.com/ahmetbabli7" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="https://www.linkedin.com/in/ahmetbabli7/" target="_blank" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
             <a href="https://github.com/AhmetBabli" target="_blank" class="social-icon" title="GitHub"><i class="fab fa-github"></i></a>
@@ -253,7 +286,7 @@
     </main>
 
     <footer class="footer">
-        <a href="{{ url_for('static', filename='Ahmet_Babli_Culcu_CV.pdf') }}" download class="btn-dashboard">
+        <a href="#" class="btn-dashboard" onclick="alert('CV şu an güncelleniyor.')">
             <i class="fas fa-file-pdf"></i>
             <span>CV İndir</span>
         </a>
@@ -280,10 +313,12 @@
 
             if (!text) return;
 
+            // Kullanıcı mesajını ekle
             messages.innerHTML += `<div class="msg user">${text}</div>`;
             input.value = "";
             messages.scrollTop = messages.scrollHeight;
 
+            // Yükleniyor animasyonu
             const loadingId = "load-" + Date.now();
             messages.innerHTML += `
                 <div class="msg ai" id="${loadingId}">
@@ -302,23 +337,36 @@
                 const data = await response.json();
                 document.getElementById(loadingId).remove();
 
-                let sentClass = "sent-neu";
+                // --- DÜZELTME BURADA YAPILDI ---
+                // Python'dan artık "sentiment" gelmediği için varsayılan atıyoruz
+                // Ve "reply" yerine "response" kullanıyoruz.
+
+                let sentClass = "sent-neu"; // Varsayılan nötr
                 if (data.sentiment === "POSITIVE") sentClass = "sent-pos";
                 else if (data.sentiment === "NEGATIVE") sentClass = "sent-neg";
+
+                // Eğer backend hata mesajı dönerse veya response boşsa kontrol et
+                const botReply = data.response || "Bir hata oluştu, cevap alınamadı.";
 
                 messages.innerHTML += `
                     <div class="msg ai">
                         <span class="ai-avatar">
-                            AI ASİSTAN <span class="sentiment-indicator ${sentClass}" title="Duygu Analizi: ${data.sentiment}"></span>
+                            AI ASİSTAN <span class="sentiment-indicator ${sentClass}"></span>
                         </span>
-                        ${data.reply}
+                        ${botReply}
                     </div>`;
-                
+
                 messages.scrollTop = messages.scrollHeight;
             } catch (err) {
-                document.getElementById(loadingId).innerHTML = `
-                    <span class="ai-avatar" style="color:#ef4444">HATA</span>
-                    Bağlantı kesildi, lütfen tekrar dene akhi.`;
+                // Eğer loading elementi hala varsa sil
+                const loader = document.getElementById(loadingId);
+                if(loader) loader.remove();
+
+                messages.innerHTML += `
+                    <div class="msg ai" style="color:#ef4444">
+                        <span class="ai-avatar">HATA</span>
+                        Bağlantı hatası: ${err.message}
+                    </div>`;
             }
         }
 
