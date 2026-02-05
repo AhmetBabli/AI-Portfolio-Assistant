@@ -3,97 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yönetici Paneli</title>
+    <title>Sırdaş Yönetim Paneli</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* GENEL SAYFA AYARLARI */
         body { 
-            background: #0f172a; 
+            background: #0f172a; /* Koyu Lacivert Arka Plan */
             color: white; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-top: 40px;
+            padding-top: 20px; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
         }
-        .admin-card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        
+        /* KARTLAR (KUTULAR) */
+        .card { 
+            background: #1e293b; 
+            border: 1px solid #334155; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); 
         }
-        .form-control {
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: white;
+
+        /* GİRİŞ KUTULARI (INPUT/TEXTAREA) - GÖRÜNÜRLÜK AYARI */
+        .form-control { 
+            background-color: #334155 !important; /* Daha açık gri arka plan */
+            color: #ffffff !important; /* BEYAZ YAZI */
+            border: 1px solid #475569;
         }
-        .form-control:focus {
-            background: #0f172a;
-            color: white;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+        
+        /* Kutunun içine tıklayınca rengi değişmesin */
+        .form-control:focus { 
+            background-color: #475569 !important; 
+            color: #ffffff !important; 
+            border-color: #3b82f6; 
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25); 
         }
-        .form-control::placeholder { color: #64748b; }
+
+        /* Silik Yazılar (Placeholder) */
+        .form-control::placeholder {
+            color: #cbd5e1 !important; /* Açık gri */
+            opacity: 0.8;
+        }
+
+        /* DİĞER BUTON VE TAB AYARLARI */
+        .nav-tabs .nav-link { color: #94a3b8; border: none; }
+        .nav-tabs .nav-link:hover { color: #cbd5e1; }
+        .nav-tabs .nav-link.active { background-color: #1e293b; color: #3b82f6; border-bottom: 2px solid #3b82f6; }
+        .btn-success { background-color: #10b981; border: none; }
+        .btn-success:hover { background-color: #059669; }
+        .text-info { color: #38bdf8 !important; }
     </style>
 </head>
 <body>
-    <div class="container" style="max-width: 800px;">
-        
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>🛠️ Yönetici Paneli</h1>
-            <a href="/logout" class="btn btn-outline-danger btn-sm"><i class="fas fa-sign-out-alt"></i> Çıkış</a>
+    <div class="container pb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4 p-3 rounded" style="background: #1e293b;">
+            <h2 class="m-0"><i class="fas fa-robot me-2"></i>Sırdaş Admin</h2>
+            <div>
+                <a href="/cv_olustur" class="btn btn-success me-2 fw-bold">
+                    <i class="fas fa-file-pdf me-2"></i>CV Güncelle & İndir
+                </a>
+                <a href="/logout" class="btn btn-outline-danger btn-sm">Çıkış</a>
+            </div>
         </div>
 
-        <div class="card admin-card p-4 mb-5">
-            <h4 class="mb-3 text-primary"><i class="fas fa-plus-circle me-2"></i>Yeni Proje Ekle</h4>
-            <form action="/proje_ekle" method="POST">
-                <div class="mb-3">
-                    <input type="text" name="baslik" class="form-control" placeholder="Proje Başlığı" required>
-                </div>
-                <div class="mb-3">
-                    <input type="text" name="teknolojiler" class="form-control" placeholder="Kullanılan Teknolojiler (Python, Flask vs.)">
-                </div>
-                <div class="mb-3">
-                    <textarea name="aciklama" class="form-control" rows="3" placeholder="Proje ne işe yarıyor?"></textarea>
-                </div>
-                <div class="mb-3">
-                    <input type="text" name="link" class="form-control" placeholder="GitHub veya Proje Linki">
-                </div>
-                <button type="submit" class="btn btn-primary w-100 fw-bold">
-                    <i class="fas fa-save me-2"></i>Projeyi Kaydet
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="projeler-tab" data-bs-toggle="tab" data-bs-target="#projeler" type="button">
+                    <i class="fas fa-code me-2"></i>Projeler
                 </button>
-            </form>
-        </div>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="profil-tab" data-bs-toggle="tab" data-bs-target="#profil" type="button">
+                    <i class="fas fa-user-edit me-2"></i>Profil & Yetenekler
+                </button>
+            </li>
+        </ul>
 
-        <div class="card admin-card">
-            <div class="card-header bg-secondary text-white border-0" style="border-radius: 15px 15px 0 0;">
-                <h5 class="mb-0"><i class="fas fa-list me-2"></i>Mevcut Projeler</h5>
-            </div>
-            <div class="card-body p-0">
-                {% for p in projeler %}
-                <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="text-info mb-1">{{ p.baslik }}</h5>
-                        <small class="text-muted d-block mb-1"><i class="fas fa-code me-1"></i>{{ p.teknolojiler }}</small>
-                        <p class="mb-0 text-light small opacity-75">{{ p.aciklama }}</p>
+        <div class="tab-content" id="myTabContent">
+            
+            <div class="tab-pane fade show active" id="projeler">
+                <div class="row">
+                    <div class="col-md-5 mb-4">
+                        <div class="card p-4 h-100">
+                            <h5 class="text-info mb-3">Yeni Proje Ekle</h5>
+                            <form action="/proje_ekle" method="POST">
+                                <div class="mb-3">
+                                    <input type="text" name="baslik" class="form-control" placeholder="Proje Adı (Örn: TrikoPatron)" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" name="teknolojiler" class="form-control" placeholder="Teknolojiler (Python, Flask...)">
+                                </div>
+                                <div class="mb-3">
+                                    <textarea name="aciklama" class="form-control" rows="4" placeholder="Proje ne yapıyor?"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" name="link" class="form-control" placeholder="GitHub Linki">
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-plus me-2"></i>Listeye Ekle
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                    <a href="/proje_sil/{{ p.id }}" class="btn btn-danger btn-sm ms-3 px-3" onclick="return confirm('Bu projeyi silmek istediğine emin misin akhi?');">
-                        <i class="fas fa-trash-alt me-1"></i> Sil
-                    </a>
+
+                    <div class="col-md-7">
+                        <div class="card p-3">
+                            <h5 class="text-info mb-3">Mevcut Projeler</h5>
+                            <div class="list-group list-group-flush">
+                                {% for p in projeler %}
+                                <div class="list-group-item bg-transparent text-white border-bottom border-secondary d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold text-light">{{ p.baslik }}</h6>
+                                        <small class="text-muted d-block">{{ p.teknolojiler }}</small>
+                                        <small class="text-white-50">{{ p.aciklama }}</small>
+                                    </div>
+                                    <a href="/proje_sil/{{ p.id }}" class="btn btn-danger btn-sm ms-2" onclick="return confirm('Bu projeyi siliyor muyuz akhi?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                                {% else %}
+                                <div class="text-center text-muted py-4">Henüz proje yok akhi.</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {% else %}
-                <div class="p-5 text-center text-muted">
-                    <i class="fas fa-folder-open fa-3x mb-3"></i>
-                    <p>Henüz hiç proje eklenmemiş akhi.</p>
-                </div>
-                {% endfor %}
             </div>
-        </div>
 
-        <div class="text-center mt-4 pb-5">
-            <a href="/" class="text-decoration-none text-info">
-                <i class="fas fa-arrow-left me-2"></i>Siteye Dön
-            </a>
-        </div>
+            <div class="tab-pane fade" id="profil">
+                <div class="card p-4">
+                    <form action="/cv_guncelle" method="POST">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label class="text-info fw-bold mb-2">Hakkımda (Profile)</label>
+                                <textarea name="hakkimda" class="form-control" rows="4" placeholder="Kısa özgeçmişin...">{{ cv_data.hakkimda }}</textarea>
+                            </div>
 
+                            <div class="col-md-6 mb-3">
+                                <label class="text-info fw-bold mb-2">Yetenekler (Skills)</label>
+                                <textarea name="yetenekler" class="form-control" rows="6" placeholder="Python&#10;Flask...">{{ cv_data.yetenekler }}</textarea>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="text-info fw-bold mb-2">Sertifikalar (Certificates)</label>
+                                <textarea name="sertifikalar" class="form-control" rows="6" placeholder="🏅 GAİB Sertifikası...">{{ cv_data.sertifikalar }}</textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning w-100 fw-bold text-dark mt-3">
+                            <i class="fas fa-save me-2"></i>Bilgileri Kaydet
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
