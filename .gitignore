@@ -11,8 +11,14 @@ venv/
 # Eğer oluşturursan gizli anahtar dosyası
 sirlar.py
 
-# Veritabanı (Bunu ekle ki yerel testlerin GitHub'a gidip sunucuyu karıştırmasın)
+# Veritabanı ve Yüklemeler (Yerel testlerin GitHub'a gidip sunucuyu karıştırmasın)
+*.db
+*.sqlite3
+instance/
+static/uploads/
 static/projects.json
+static/cv_data.json
+static/Ahmet_Babli_CV.pdf
 
 # VS Code ayarları (Gerek yok)
 .vscode/

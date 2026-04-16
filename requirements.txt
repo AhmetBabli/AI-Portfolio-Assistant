@@ -1,0 +1,9 @@
+Flask
+requests
+google-generativeai
+Flask-Limiter
+python-dotenv
+Flask-SQLAlchemy
+Flask-Login
+Flask-WTF
+Werkzeug

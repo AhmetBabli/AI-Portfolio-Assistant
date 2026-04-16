@@ -12,5 +12,19 @@
         "teknolojiler": "Google Gemini API, Flask",
         "aciklama": "Kullanıcı duygu analizine göre etkileşim kuran akıllı portfolyo asistanı.",
         "link": "github.com/AhmetBabli"
+    },
+    {
+        "id": 785013834,
+        "baslik": "TrikoPatron ERP Sistemi",
+        "teknolojiler": "testt",
+        "aciklama": "",
+        "link": ""
+    },
+    {
+        "id": 4161084994,
+        "baslik": "n8n deneme projesi",
+        "teknolojiler": "Python, Flask, Google Gemini API, Bootstrap, JSON Database",
+        "aciklama": "",
+        "link": ""
     }
 ]

@@ -3,77 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sırdaş Yönetim Paneli</title>
+    <title>Sırdaş Admin | Kontrol Merkezi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* GENEL SAYFA AYARLARI */
+        /* v3 BEYAZ TEMA & GLASSMORPHISM AYARLARI */
+        :root {
+            --bg-color: #f5f7fa; /* Ferah arka plan */
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --accent-blue: #3b82f6;
+            --text-main: #1e293b;
+        }
+
         body { 
-            background: #0f172a; /* Koyu Lacivert Arka Plan */
-            color: white; 
-            padding-top: 20px; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main); 
+            font-family: 'Inter', sans-serif; 
+            padding-top: 30px;
         }
         
-        /* KARTLAR (KUTULAR) */
-        .card { 
-            background: #1e293b; 
-            border: 1px solid #334155; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); 
+        /* BUZLU CAM KARTLAR */
+        .glass-card { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border); 
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease;
         }
 
-        /* GİRİŞ KUTULARI (INPUT/TEXTAREA) - GÖRÜNÜRLÜK AYARI */
+        .glass-card:hover { transform: translateY(-5px); }
+
+        /* INPUT VE TEXTAREA (MODERN VE NET) */
         .form-control { 
-            background-color: #334155 !important; /* Daha açık gri arka plan */
-            color: #ffffff !important; /* BEYAZ YAZI */
-            border: 1px solid #475569;
+            background: rgba(255, 255, 255, 0.8) !important; 
+            border: 1px solid #e2e8f0 !important;
+            color: var(--text-main) !important;
+            border-radius: 12px;
+            padding: 12px;
         }
         
-        /* Kutunun içine tıklayınca rengi değişmesin */
         .form-control:focus { 
-            background-color: #475569 !important; 
-            color: #ffffff !important; 
-            border-color: #3b82f6; 
-            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25); 
+            border-color: var(--accent-blue) !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
 
-        /* Silik Yazılar (Placeholder) */
-        .form-control::placeholder {
-            color: #cbd5e1 !important; /* Açık gri */
-            opacity: 0.8;
+        /* TABS (SEKMELER) */
+        .nav-tabs { border: none; gap: 10px; }
+        .nav-tabs .nav-link { 
+            background: transparent;
+            color: #64748b; 
+            border: none; 
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+        .nav-tabs .nav-link.active { 
+            background: white !important; 
+            color: var(--accent-blue) !important; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        /* DİĞER BUTON VE TAB AYARLARI */
-        .nav-tabs .nav-link { color: #94a3b8; border: none; }
-        .nav-tabs .nav-link:hover { color: #cbd5e1; }
-        .nav-tabs .nav-link.active { background-color: #1e293b; color: #3b82f6; border-bottom: 2px solid #3b82f6; }
-        .btn-success { background-color: #10b981; border: none; }
-        .btn-success:hover { background-color: #059669; }
-        .text-info { color: #38bdf8 !important; }
+        /* ÖZEL BUTONLAR */
+        .btn-success { background: #10b981; border: none; border-radius: 12px; }
+        .btn-primary { background: var(--accent-blue); border: none; border-radius: 12px; }
+        .btn-danger { border-radius: 10px; }
+
+        .header-box {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
     </style>
 </head>
 <body>
     <div class="container pb-5">
-        <div class="d-flex justify-content-between align-items-center mb-4 p-3 rounded" style="background: #1e293b;">
-            <h2 class="m-0"><i class="fas fa-robot me-2"></i>Sırdaş Admin</h2>
-            <div>
-                <a href="/cv_olustur" class="btn btn-success me-2 fw-bold">
-                    <i class="fas fa-file-pdf me-2"></i>CV Güncelle & İndir
-                </a>
-                <a href="/logout" class="btn btn-outline-danger btn-sm">Çıkış</a>
+        <div class="d-flex justify-content-between align-items-center mb-5 p-4 header-box">
+            <h2 class="m-0 fw-bold" style="color: var(--accent-blue);">
+                <i class="fas fa-shield-alt me-2"></i>Sırdaş Admin
+            </h2>
+            <div class="d-flex align-items-center">
+                <form action="/logout" method="POST" class="m-0">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-link text-danger text-decoration-none fw-bold p-0">Çıkış Yap</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <div class="glass-card p-3 d-flex align-items-center">
+                    <div class="ms-3 rounded bg-primary text-white p-3 me-3"><i class="fas fa-eye fa-2x"></i></div>
+                    <div>
+                        <h6 class="text-muted mb-0">Toplam Ziyaret</h6>
+                        <h3 class="fw-bold mb-0 text-dark">{{ cv_data.sayfa_goruntulenme|default('0', true) }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card p-3 d-flex align-items-center">
+                    <div class="ms-3 rounded bg-success text-white p-3 me-3"><i class="fas fa-comment-dots fa-2x"></i></div>
+                    <div>
+                        <h6 class="text-muted mb-0">Bot Gelen Mesajlar</h6>
+                        <h3 class="fw-bold mb-0 text-dark">{{ cv_data.toplam_mesaj|default('0', true) }}</h3>
+                    </div>
+                </div>
             </div>
         </div>
 
         <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
             <li class="nav-item">
                 <button class="nav-link active" id="projeler-tab" data-bs-toggle="tab" data-bs-target="#projeler" type="button">
-                    <i class="fas fa-code me-2"></i>Projeler
+                    <i class="fas fa-layer-group me-2"></i>Proje Yönetimi
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link" id="profil-tab" data-bs-toggle="tab" data-bs-target="#profil" type="button">
-                    <i class="fas fa-user-edit me-2"></i>Profil & Yetenekler
+                    <i class="fas fa-user-circle me-2"></i>Profil Bilgileri
                 </button>
             </li>
         </ul>
@@ -83,45 +133,53 @@
             <div class="tab-pane fade show active" id="projeler">
                 <div class="row">
                     <div class="col-md-5 mb-4">
-                        <div class="card p-4 h-100">
-                            <h5 class="text-info mb-3">Yeni Proje Ekle</h5>
-                            <form action="/proje_ekle" method="POST">
+                        <div class="glass-card p-4 h-100">
+                            <h5 class="fw-bold mb-4"><i class="fas fa-plus-circle text-primary me-2"></i>Yeni Proje Ekle</h5>
+                            <form action="/proje_ekle" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                                 <div class="mb-3">
-                                    <input type="text" name="baslik" class="form-control" placeholder="Proje Adı (Örn: TrikoPatron)" required>
+                                    <input type="text" name="baslik" class="form-control" placeholder="Proje Adı" required>
                                 </div>
                                 <div class="mb-3">
                                     <input type="text" name="teknolojiler" class="form-control" placeholder="Teknolojiler (Python, Flask...)">
                                 </div>
                                 <div class="mb-3">
-                                    <textarea name="aciklama" class="form-control" rows="4" placeholder="Proje ne yapıyor?"></textarea>
+                                    <textarea name="aciklama" class="form-control" rows="4" placeholder="Proje detayları..."></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" name="link" class="form-control" placeholder="GitHub Linki">
+                                    <input type="text" name="link" class="form-control" placeholder="GitHub / Canlı Link">
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-plus me-2"></i>Listeye Ekle
-                                </button>
+                                <div class="mb-3">
+                                    <input type="file" name="foto" class="form-control" accept="image/*" title="Proje Görseli (Opsiyonel)">
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Listeye Ekle</button>
                             </form>
                         </div>
                     </div>
 
                     <div class="col-md-7">
-                        <div class="card p-3">
-                            <h5 class="text-info mb-3">Mevcut Projeler</h5>
+                        <div class="glass-card p-4">
+                            <h5 class="fw-bold mb-4"><i class="fas fa-list text-primary me-2"></i>Mevcut Projeler</h5>
                             <div class="list-group list-group-flush">
                                 {% for p in projeler %}
-                                <div class="list-group-item bg-transparent text-white border-bottom border-secondary d-flex justify-content-between align-items-center">
+                                <div class="list-group-item bg-transparent d-flex justify-content-between align-items-center py-3 border-bottom">
                                     <div>
-                                        <h6 class="mb-1 fw-bold text-light">{{ p.baslik }}</h6>
-                                        <small class="text-muted d-block">{{ p.teknolojiler }}</small>
-                                        <small class="text-white-50">{{ p.aciklama }}</small>
+                                        <h6 class="mb-1 fw-bold text-dark">{{ p.baslik }}</h6>
+                                        <small class="text-primary d-block mb-1">{{ p.teknolojiler }}</small>
+                                        <small class="text-muted">{{ p.aciklama[:100] }}...</small>
+                                        {% if p.gorsel %}
+                                        <small class="text-success d-block mt-1"><i class="fas fa-image"></i> Görsel Eklendi</small>
+                                        {% endif %}
                                     </div>
-                                    <a href="/proje_sil/{{ p.id }}" class="btn btn-danger btn-sm ms-2" onclick="return confirm('Bu projeyi siliyor muyuz akhi?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    <form action="/proje_sil/{{ p.id }}" method="POST" onsubmit="return confirm('Silinsin mi akhi?')">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm border-0">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
                                 </div>
                                 {% else %}
-                                <div class="text-center text-muted py-4">Henüz proje yok akhi.</div>
+                                <div class="text-center text-muted py-5">Henüz proje eklenmemiş akhi.</div>
                                 {% endfor %}
                             </div>
                         </div>
@@ -130,28 +188,16 @@
             </div>
 
             <div class="tab-pane fade" id="profil">
-                <div class="card p-4">
-                    <form action="/cv_guncelle" method="POST">
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <label class="text-info fw-bold mb-2">Hakkımda (Profile)</label>
-                                <textarea name="hakkimda" class="form-control" rows="4" placeholder="Kısa özgeçmişin...">{{ cv_data.hakkimda }}</textarea>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label class="text-info fw-bold mb-2">Yetenekler (Skills)</label>
-                                <textarea name="yetenekler" class="form-control" rows="6" placeholder="Python&#10;Flask...">{{ cv_data.yetenekler }}</textarea>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label class="text-info fw-bold mb-2">Sertifikalar (Certificates)</label>
-                                <textarea name="sertifikalar" class="form-control" rows="6" placeholder="🏅 GAİB Sertifikası...">{{ cv_data.sertifikalar }}</textarea>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-warning w-100 fw-bold text-dark mt-3">
-                            <i class="fas fa-save me-2"></i>Bilgileri Kaydet
-                        </button>
+                <!-- Sadece Özgeçmiş Yönetimi Kaldı -->
+                
+                <!-- CV Yükleme Alanı -->
+                <div class="glass-card p-4 mt-4 border-primary">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-file-pdf text-danger me-2"></i>Özgeçmiş Belgesi (PDF) Yükle</h5>
+                    <p class="text-muted small mb-3">Artık harici sistemlere ihtiyaç duymadan PDF dosyanızı direkt buradan güncelleyebilirsiniz.</p>
+                    <form action="/cv_pdf_yukle" method="POST" enctype="multipart/form-data" class="d-flex align-items-center">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                        <input type="file" name="cv_pdf" class="form-control me-3" accept=".pdf" required>
+                        <button type="submit" class="btn btn-danger px-4 fw-bold text-nowrap"><i class="fas fa-upload me-2"></i>Yükle</button>
                     </form>
                 </div>
             </div>
