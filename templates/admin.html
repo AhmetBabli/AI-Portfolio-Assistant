@@ -1,210 +1,418 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sırdaş Admin | Kontrol Merkezi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        /* v3 BEYAZ TEMA & GLASSMORPHISM AYARLARI */
-        :root {
-            --bg-color: #f5f7fa; /* Ferah arka plan */
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.4);
-            --accent-blue: #3b82f6;
-            --text-main: #1e293b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sırdaş Admin | Kontrol Merkezi</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root[data-theme="dark"]{
+  --bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;
+  --text:#e6edf3;--muted:#8b949e;--accent:#3b82f6;--accent2:#10b981;
+  --danger:#ef4444;--warn:#f59e0b;--shadow:rgba(0,0,0,.4);
+}
+:root[data-theme="light"]{
+  --bg:#f0f4f8;--surface:#ffffff;--surface2:#f8fafc;--border:#e2e8f0;
+  --text:#1e293b;--muted:#64748b;--accent:#2563eb;--accent2:#059669;
+  --danger:#dc2626;--warn:#d97706;--shadow:rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
 
-        body { 
-            background: var(--bg-color); 
-            color: var(--text-main); 
-            font-family: 'Inter', sans-serif; 
-            padding-top: 30px;
-        }
-        
-        /* BUZLU CAM KARTLAR */
-        .glass-card { 
-            background: var(--glass-bg); 
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border); 
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-            transition: transform 0.3s ease;
-        }
+/* HEADER */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-brand{font-size:1.1rem;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:8px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.theme-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);
+  padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.85rem;transition:.2s}
+.theme-btn:hover{border-color:var(--accent)}
+.logout-btn{background:none;border:1px solid var(--danger);color:var(--danger);
+  padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.85rem;transition:.2s}
+.logout-btn:hover{background:var(--danger);color:#fff}
 
-        .glass-card:hover { transform: translateY(-5px); }
+/* LAYOUT */
+.container{max-width:1100px;margin:0 auto;padding:24px 20px}
 
-        /* INPUT VE TEXTAREA (MODERN VE NET) */
-        .form-control { 
-            background: rgba(255, 255, 255, 0.8) !important; 
-            border: 1px solid #e2e8f0 !important;
-            color: var(--text-main) !important;
-            border-radius: 12px;
-            padding: 12px;
-        }
-        
-        .form-control:focus { 
-            border-color: var(--accent-blue) !important;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        }
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;display:flex;align-items:center;gap:16px;transition:.2s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--shadow)}
+.stat-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:1.2rem;flex-shrink:0}
+.stat-icon.blue{background:rgba(59,130,246,.15);color:var(--accent)}
+.stat-icon.green{background:rgba(16,185,129,.15);color:var(--accent2)}
+.stat-icon.warn{background:rgba(245,158,11,.15);color:var(--warn)}
+.stat-icon.red{background:rgba(239,68,68,.15);color:var(--danger)}
+.stat-label{font-size:.75rem;color:var(--muted);margin-bottom:2px}
+.stat-val{font-size:1.6rem;font-weight:700}
 
-        /* TABS (SEKMELER) */
-        .nav-tabs { border: none; gap: 10px; }
-        .nav-tabs .nav-link { 
-            background: transparent;
-            color: #64748b; 
-            border: none; 
-            border-radius: 12px;
-            padding: 10px 20px;
-            font-weight: 600;
-        }
-        .nav-tabs .nav-link.active { 
-            background: white !important; 
-            color: var(--accent-blue) !important; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
+/* TABS */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:24px}
+.tab-btn{background:none;border:none;color:var(--muted);padding:10px 18px;cursor:pointer;
+  font-size:.9rem;font-weight:600;border-bottom:2px solid transparent;transition:.2s;font-family:'Inter',sans-serif}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-btn:hover{color:var(--text)}
+.tab-pane{display:none}.tab-pane.active{display:block}
 
-        /* ÖZEL BUTONLAR */
-        .btn-success { background: #10b981; border: none; border-radius: 12px; }
-        .btn-primary { background: var(--accent-blue); border: none; border-radius: 12px; }
-        .btn-danger { border-radius: 10px; }
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px}
+.card-title{font-size:.95rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title i{color:var(--accent)}
 
-        .header-box {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-        }
-    </style>
+/* FORM */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:600}
+.form-control{width:100%;background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);border-radius:9px;padding:9px 13px;font-size:.9rem;font-family:'Inter',sans-serif;transition:.2s}
+.form-control:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+textarea.form-control{resize:vertical;min-height:90px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;
+  border:none;cursor:pointer;font-size:.85rem;font-weight:600;font-family:'Inter',sans-serif;transition:.2s}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{opacity:.85}
+.btn-success{background:var(--accent2);color:#fff}.btn-success:hover{opacity:.85}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{opacity:.85}
+.btn-outline{background:none;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm{padding:5px 10px;font-size:.78rem}
+.btn-block{width:100%;justify-content:center}
+
+/* PROJE LİSTESİ */
+.proje-list{display:flex;flex-direction:column;gap:10px}
+.proje-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.proje-info h6{font-size:.9rem;font-weight:700;margin-bottom:3px}
+.proje-info .tech{font-size:.75rem;color:var(--accent);margin-bottom:3px}
+.proje-info .desc{font-size:.78rem;color:var(--muted)}
+.proje-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* GRID 2 */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+
+/* ANALITIK */
+.log-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.log-table th{background:var(--surface2);padding:10px 12px;text-align:left;
+  font-size:.75rem;color:var(--muted);border-bottom:1px solid var(--border)}
+.log-table td{padding:9px 12px;border-bottom:1px solid var(--border)}
+.log-table tr:last-child td{border:none}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.72rem;font-weight:600}
+.badge-blue{background:rgba(59,130,246,.15);color:var(--accent)}
+.badge-green{background:rgba(16,185,129,.15);color:var(--accent2)}
+.badge-gray{background:var(--surface2);color:var(--muted)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;
+  align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:26px;width:90%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-title{font-weight:700;font-size:1rem}
+.modal-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer}
+.modal-close:hover{color:var(--text)}
+
+/* CHART BAR */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-label{font-size:.78rem;color:var(--muted);width:100px;flex-shrink:0;text-align:right}
+.bar-track{flex:1;background:var(--surface2);border-radius:4px;height:8px}
+.bar-fill{height:8px;border-radius:4px;background:var(--accent);transition:width .6s ease}
+.bar-count{font-size:.75rem;color:var(--muted);width:30px}
+
+.empty{text-align:center;padding:32px;color:var(--muted);font-size:.9rem}
+.divider{border:none;border-top:1px solid var(--border);margin:18px 0}
+</style>
 </head>
 <body>
-    <div class="container pb-5">
-        <div class="d-flex justify-content-between align-items-center mb-5 p-4 header-box">
-            <h2 class="m-0 fw-bold" style="color: var(--accent-blue);">
-                <i class="fas fa-shield-alt me-2"></i>Sırdaş Admin
-            </h2>
-            <div class="d-flex align-items-center">
-                <form action="/logout" method="POST" class="m-0">
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn btn-link text-danger text-decoration-none fw-bold p-0">Çıkış Yap</button>
-                </form>
-            </div>
-        </div>
 
-        <div class="row mb-4">
-            <div class="col-md-6 mb-3 mb-md-0">
-                <div class="glass-card p-3 d-flex align-items-center">
-                    <div class="ms-3 rounded bg-primary text-white p-3 me-3"><i class="fas fa-eye fa-2x"></i></div>
-                    <div>
-                        <h6 class="text-muted mb-0">Toplam Ziyaret</h6>
-                        <h3 class="fw-bold mb-0 text-dark">{{ cv_data.sayfa_goruntulenme|default('0', true) }}</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="glass-card p-3 d-flex align-items-center">
-                    <div class="ms-3 rounded bg-success text-white p-3 me-3"><i class="fas fa-comment-dots fa-2x"></i></div>
-                    <div>
-                        <h6 class="text-muted mb-0">Bot Gelen Mesajlar</h6>
-                        <h3 class="fw-bold mb-0 text-dark">{{ cv_data.toplam_mesaj|default('0', true) }}</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand"><i class="fas fa-shield-alt"></i>Sırdaş Admin</div>
+  <div class="topbar-right">
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn"><i class="fas fa-moon"></i> Açık Tema</button>
+    <form action="/logout" method="POST" style="margin:0">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Çıkış</button>
+    </form>
+  </div>
+</div>
 
-        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
-            <li class="nav-item">
-                <button class="nav-link active" id="projeler-tab" data-bs-toggle="tab" data-bs-target="#projeler" type="button">
-                    <i class="fas fa-layer-group me-2"></i>Proje Yönetimi
-                </button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" id="profil-tab" data-bs-toggle="tab" data-bs-target="#profil" type="button">
-                    <i class="fas fa-user-circle me-2"></i>Profil Bilgileri
-                </button>
-            </li>
-        </ul>
+<div class="container">
 
-        <div class="tab-content" id="myTabContent">
-            
-            <div class="tab-pane fade show active" id="projeler">
-                <div class="row">
-                    <div class="col-md-5 mb-4">
-                        <div class="glass-card p-4 h-100">
-                            <h5 class="fw-bold mb-4"><i class="fas fa-plus-circle text-primary me-2"></i>Yeni Proje Ekle</h5>
-                            <form action="/proje_ekle" method="POST" enctype="multipart/form-data">
-                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                                <div class="mb-3">
-                                    <input type="text" name="baslik" class="form-control" placeholder="Proje Adı" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" name="teknolojiler" class="form-control" placeholder="Teknolojiler (Python, Flask...)">
-                                </div>
-                                <div class="mb-3">
-                                    <textarea name="aciklama" class="form-control" rows="4" placeholder="Proje detayları..."></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" name="link" class="form-control" placeholder="GitHub / Canlı Link">
-                                </div>
-                                <div class="mb-3">
-                                    <input type="file" name="foto" class="form-control" accept="image/*" title="Proje Görseli (Opsiyonel)">
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Listeye Ekle</button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="col-md-7">
-                        <div class="glass-card p-4">
-                            <h5 class="fw-bold mb-4"><i class="fas fa-list text-primary me-2"></i>Mevcut Projeler</h5>
-                            <div class="list-group list-group-flush">
-                                {% for p in projeler %}
-                                <div class="list-group-item bg-transparent d-flex justify-content-between align-items-center py-3 border-bottom">
-                                    <div>
-                                        <h6 class="mb-1 fw-bold text-dark">{{ p.baslik }}</h6>
-                                        <small class="text-primary d-block mb-1">{{ p.teknolojiler }}</small>
-                                        <small class="text-muted">{{ p.aciklama[:100] }}...</small>
-                                        {% if p.gorsel %}
-                                        <small class="text-success d-block mt-1"><i class="fas fa-image"></i> Görsel Eklendi</small>
-                                        {% endif %}
-                                    </div>
-                                    <form action="/proje_sil/{{ p.id }}" method="POST" onsubmit="return confirm('Silinsin mi akhi?')">
-                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm border-0">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                                {% else %}
-                                <div class="text-center text-muted py-5">Henüz proje eklenmemiş akhi.</div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="profil">
-                <!-- Sadece Özgeçmiş Yönetimi Kaldı -->
-                
-                <!-- CV Yükleme Alanı -->
-                <div class="glass-card p-4 mt-4 border-primary">
-                    <h5 class="fw-bold mb-3"><i class="fas fa-file-pdf text-danger me-2"></i>Özgeçmiş Belgesi (PDF) Yükle</h5>
-                    <p class="text-muted small mb-3">Artık harici sistemlere ihtiyaç duymadan PDF dosyanızı direkt buradan güncelleyebilirsiniz.</p>
-                    <form action="/cv_pdf_yukle" method="POST" enctype="multipart/form-data" class="d-flex align-items-center">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                        <input type="file" name="cv_pdf" class="form-control me-3" accept=".pdf" required>
-                        <button type="submit" class="btn btn-danger px-4 fw-bold text-nowrap"><i class="fas fa-upload me-2"></i>Yükle</button>
-                    </form>
-                </div>
-            </div>
-
-        </div>
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="fas fa-eye"></i></div>
+      <div><div class="stat-label">Toplam Ziyaret</div>
+        <div class="stat-val">{{ cv_data.sayfa_goruntulenme|default('0') }}</div></div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="fas fa-comment-dots"></i></div>
+      <div><div class="stat-label">Toplam Bot Mesajı</div>
+        <div class="stat-val">{{ cv_data.toplam_mesaj|default('0') }}</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon warn"><i class="fas fa-chart-line"></i></div>
+      <div><div class="stat-label">Son 7 Gün Mesaj</div>
+        <div class="stat-val">{{ haftalik_mesaj|default('0') }}</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red"><i class="fas fa-layer-group"></i></div>
+      <div><div class="stat-label">Toplam Proje</div>
+        <div class="stat-val">{{ projeler|length }}</div></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('projeler',this)"><i class="fas fa-layer-group"></i> Projeler</button>
+    <button class="tab-btn" onclick="switchTab('icerik',this)"><i class="fas fa-pen-nib"></i> İçerik & CV</button>
+    <button class="tab-btn" onclick="switchTab('analitik',this)"><i class="fas fa-chart-bar"></i> Analitik</button>
+  </div>
+
+  <!-- TAB: PROJELER -->
+  <div class="tab-pane active" id="tab-projeler">
+    <div class="grid2">
+      <!-- Ekle -->
+      <div class="card">
+        <div class="card-title"><i class="fas fa-plus-circle"></i>Yeni Proje Ekle</div>
+        <form action="/proje_ekle" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          <div class="form-group"><label>Proje Adı *</label>
+            <input type="text" name="baslik" class="form-control" placeholder="TrikoPatron ERP" required></div>
+          <div class="form-group"><label>Teknolojiler</label>
+            <input type="text" name="teknolojiler" class="form-control" placeholder="Python, Flask, SQLite"></div>
+          <div class="form-group"><label>Açıklama</label>
+            <textarea name="aciklama" class="form-control" placeholder="Projeyi kısaca anlat..."></textarea></div>
+          <div class="form-group"><label>Link (GitHub / Demo)</label>
+            <input type="text" name="link" class="form-control" placeholder="https://github.com/..."></div>
+          <div class="form-group"><label>Görsel (opsiyonel)</label>
+            <input type="file" name="foto" class="form-control" accept="image/*"></div>
+          <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-plus"></i> Ekle</button>
+        </form>
+      </div>
+
+      <!-- Liste -->
+      <div class="card">
+        <div class="card-title"><i class="fas fa-list"></i>Mevcut Projeler ({{ projeler|length }})</div>
+        <div class="proje-list">
+          {% for p in projeler %}
+          <div class="proje-item">
+            <div class="proje-info">
+              <h6>{{ p.baslik }}</h6>
+              <div class="tech">{{ p.teknolojiler }}</div>
+              <div class="desc">{{ (p.aciklama or '')[:80] }}{% if (p.aciklama or '')|length > 80 %}...{% endif %}</div>
+            </div>
+            <div class="proje-actions">
+              <button class="btn btn-outline btn-sm" onclick="openEdit({{ p.id }},'{{ p.baslik|e }}','{{ p.teknolojiler|e }}',`{{ p.aciklama|e }}`,`{{ p.link|e }}`)">
+                <i class="fas fa-pen"></i>
+              </button>
+              <form action="/proje_sil/{{ p.id }}" method="POST" onsubmit="return confirm('Silinsin mi?')">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+              </form>
+            </div>
+          </div>
+          {% else %}
+          <div class="empty"><i class="fas fa-inbox"></i><br>Henüz proje eklenmemiş.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: İÇERİK & CV -->
+  <div class="tab-pane" id="tab-icerik">
+    <div class="grid2">
+      <!-- Ayarlar formu -->
+      <div class="card">
+        <div class="card-title"><i class="fas fa-sliders-h"></i>Bot Bilgi Güncelleme</div>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:16px">
+          Bu alanlar Sırdaş'ın bilgi tabanına eklenir. Statik profil zaten kodda tanımlı — burası <b>ek / güncel</b> bilgi içindir.
+        </p>
+        <form action="/ayar_guncelle" method="POST">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          <div class="form-group"><label>Hakkımda (Ek Bilgi)</label>
+            <textarea name="hakkimda" class="form-control" rows="3" placeholder="Güncel bir bilgi ekle...">{{ cv_data.hakkimda or '' }}</textarea></div>
+          <div class="form-group"><label>Yetenekler / Beceriler (Ek)</label>
+            <textarea name="yetenekler" class="form-control" rows="3" placeholder="Yeni öğrendiğin teknoloji vb.">{{ cv_data.yetenekler or '' }}</textarea></div>
+          <div class="form-group"><label>İletişim (Ek)</label>
+            <input type="text" name="iletisim" class="form-control" value="{{ cv_data.iletisim or '' }}" placeholder="Ek telefon, sosyal medya vb."></div>
+          <div class="form-group"><label>Sertifikalar / Başarılar (Ek)</label>
+            <textarea name="sertifikalar" class="form-control" rows="2" placeholder="Yeni aldığın sertifikalar...">{{ cv_data.sertifikalar or '' }}</textarea></div>
+          <div class="form-group"><label><i class="fas fa-star" style="color:var(--warn)"></i> Özel Not (Prompt'a Direkt Girer)</label>
+            <textarea name="prompt_ek_bilgi" class="form-control" rows="3" placeholder="Örn: Bu hafta Ahmet Bey TÜBİTAK başvurusunu tamamladı.">{{ cv_data.prompt_ek_bilgi or '' }}</textarea></div>
+          <button type="submit" class="btn btn-success btn-block"><i class="fas fa-save"></i> Kaydet</button>
+        </form>
+      </div>
+
+      <!-- CV PDF -->
+      <div class="card">
+        <div class="card-title"><i class="fas fa-file-pdf" style="color:var(--danger)"></i>CV PDF Güncelle</div>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:16px">
+          Mevcut CV dosyasının üzerine yazar. Yalnızca <b>.pdf</b> formatı kabul edilir.
+        </p>
+        <form action="/cv_pdf_yukle" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          <div class="form-group"><label>PDF Dosyası</label>
+            <input type="file" name="cv_pdf" class="form-control" accept=".pdf" required></div>
+          <button type="submit" class="btn btn-danger btn-block"><i class="fas fa-upload"></i> Yükle & Güncelle</button>
+        </form>
+        <hr class="divider">
+        <p style="font-size:.8rem;color:var(--muted)"><i class="fas fa-info-circle"></i> Mevcut dosya: <code>Ahmet_Babli_CV.pdf</code></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: ANALİTİK -->
+  <div class="tab-pane" id="tab-analitik">
+    <div class="grid2" style="margin-bottom:18px">
+      <!-- Popüler Görsel Türleri -->
+      <div class="card">
+        <div class="card-title"><i class="fas fa-chart-pie"></i>Popüler Görsel Türleri</div>
+        {% if populer_gorsel %}
+          {% set max_sayi = populer_gorsel[0].sayi %}
+          {% for row in populer_gorsel %}
+          <div class="bar-row">
+            <div class="bar-label">{{ row.gorsel_turu or 'idle' }}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:{{ (row.sayi / max_sayi * 100)|int }}%"></div></div>
+            <div class="bar-count">{{ row.sayi }}</div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty">Henüz veri yok.</div>
+        {% endif %}
+      </div>
+
+      <!-- Özet -->
+      <div class="card">
+        <div class="card-title"><i class="fas fa-info-circle"></i>Özet Bilgi</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:.88rem">
+          <div style="display:flex;justify-content:space-between">
+            <span style="color:var(--muted)">Toplam Kayıtlı Konuşma</span>
+            <b>{{ son_mesajlar|length }}+</b>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="color:var(--muted)">Son 7 Gün</span>
+            <b>{{ haftalik_mesaj }}</b>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="color:var(--muted)">Aktif Proje</span>
+            <b>{{ projeler|length }}</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Son Konuşmalar -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-history"></i>Son Konuşmalar (max 20)</div>
+      {% if son_mesajlar %}
+      <div style="overflow-x:auto">
+        <table class="log-table">
+          <thead><tr>
+            <th>#</th><th>Soru</th><th>Görsel</th><th>Dil</th><th>Tarih</th>
+          </tr></thead>
+          <tbody>
+          {% for log in son_mesajlar %}
+          <tr>
+            <td style="color:var(--muted)">{{ log.id }}</td>
+            <td>{{ log.soru[:60] }}{% if log.soru|length > 60 %}…{% endif %}</td>
+            <td><span class="badge {% if log.gorsel_turu == 'idle' %}badge-gray{% elif log.gorsel_turu == 'sirdas_tour' %}badge-blue{% else %}badge-green{% endif %}">
+              {{ log.gorsel_turu or 'idle' }}</span></td>
+            <td><span class="badge badge-gray">{{ log.dil or 'tr' }}</span></td>
+            <td style="color:var(--muted);white-space:nowrap">
+              {{ log.tarih.strftime('%d.%m %H:%M') if log.tarih else '—' }}
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty"><i class="fas fa-comment-slash"></i><br>Henüz konuşma kaydı yok.</div>
+      {% endif %}
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title"><i class="fas fa-pen"></i> Proje Düzenle</span>
+      <button class="modal-close" onclick="closeEdit()"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="editForm" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      <div class="form-group"><label>Proje Adı *</label>
+        <input type="text" name="baslik" id="edit_baslik" class="form-control" required></div>
+      <div class="form-group"><label>Teknolojiler</label>
+        <input type="text" name="teknolojiler" id="edit_teknolojiler" class="form-control"></div>
+      <div class="form-group"><label>Açıklama</label>
+        <textarea name="aciklama" id="edit_aciklama" class="form-control" rows="4"></textarea></div>
+      <div class="form-group"><label>Link</label>
+        <input type="text" name="link" id="edit_link" class="form-control"></div>
+      <div class="form-group"><label>Yeni Görsel (opsiyonel)</label>
+        <input type="file" name="foto" class="form-control" accept="image/*"></div>
+      <div style="display:flex;gap:10px;margin-top:6px">
+        <button type="submit" class="btn btn-primary" style="flex:1"><i class="fas fa-save"></i> Kaydet</button>
+        <button type="button" class="btn btn-outline" onclick="closeEdit()">İptal</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// ── Tema ──────────────────────────────────────────────────────────────────────
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  const btn=document.getElementById('themeBtn');
+  btn.innerHTML=t==='dark'?'<i class="fas fa-sun"></i> Açık Tema':'<i class="fas fa-moon"></i> Koyu Tema';
+  localStorage.setItem('sirdas_theme',t);
+}
+function toggleTheme(){
+  applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+// Sayfa yüklenince kayıtlı temayı uygula
+(function(){
+  const saved=localStorage.getItem('sirdas_theme');
+  const sys=window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';
+  applyTheme(saved||sys);
+})();
+
+// ── Tab geçişi ────────────────────────────────────────────────────────────────
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+// URL ?tab=icerik parametresi varsa o sekmeyi aç
+(function(){
+  const p=new URLSearchParams(location.search).get('tab');
+  if(p){
+    const btn=document.querySelector(`.tab-btn[onclick*="'${p}'"]`);
+    if(btn) switchTab(p,btn);
+  }
+})();
+
+// ── Edit Modal ────────────────────────────────────────────────────────────────
+function openEdit(id,baslik,teknolojiler,aciklama,link){
+  document.getElementById('editForm').action='/proje_guncelle/'+id;
+  document.getElementById('edit_baslik').value=baslik;
+  document.getElementById('edit_teknolojiler').value=teknolojiler;
+  document.getElementById('edit_aciklama').value=aciklama;
+  document.getElementById('edit_link').value=link;
+  document.getElementById('editModal').classList.add('open');
+}
+function closeEdit(){document.getElementById('editModal').classList.remove('open')}
+document.getElementById('editModal').addEventListener('click',function(e){if(e.target===this)closeEdit()});
+</script>
 </body>
 </html>

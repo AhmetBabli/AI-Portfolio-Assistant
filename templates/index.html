@@ -8,55 +8,79 @@
     <meta property="og:description" content="Yapay Zeka Destekli Modern Portfolyo & CV Asistanı.">
     <meta property="og:image" content="/static/images/triko1.png">
     <meta property="og:url" content="https://portfolyo.dev">
-    <title>Ahmet Babli Çulcu | Sırdaş AI v3</title>
+    <title>Ahmet Babli Çulcu | Sırdaş AI </title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.74/build/spline-viewer.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/static/images/sirdas-logo.svg">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
     <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
 
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.25); 
-            --glass-border: rgba(255, 255, 255, 0.4);
-            --accent: #2563eb; 
-            --text-main: #1e293b; 
-            --text-sub: #64748b;
-            --user-msg: linear-gradient(135deg, #2563eb, #3b82f6); 
-            --ai-msg: rgba(255, 255, 255, 0.9); 
+            --body-overlay: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.4), rgba(9, 13, 22, 0.8));
+            --glass-bg: rgba(17, 24, 39, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #3b82f6;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --user-msg: linear-gradient(135deg, #2563eb, #1d4ed8);
+            --ai-msg: rgba(30, 41, 59, 0.8);
+            --chip-bg: rgba(30, 41, 59, 0.6);
+            --chip-border: rgba(255, 255, 255, 0.08);
+            --input-bg: rgba(17, 24, 39, 0.7);
+            --input-border: rgba(255, 255, 255, 0.08);
+            --stage-card-bg: rgba(17, 24, 39, 0.65);
+            --stage-card-border: rgba(255, 255, 255, 0.08);
+            --btn-bg: rgba(31, 41, 55, 0.75);
+            --btn-border: rgba(255, 255, 255, 0.08);
+            --shadow-color: rgba(0, 0, 0, 0.35);
+            --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            --title-color: #60a5fa;
+            --carousel-caption-bg: rgba(15, 23, 42, 0.85);
+            --body-fallback: #090d16;
         }
 
-        body, html { margin: 0; padding: 0; background-color: transparent; color: var(--text-main); font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; }
+        body, html { margin: 0; padding: 0; background-color: var(--body-fallback); color: var(--text-main); font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; }
         a { text-decoration: none; }
 
-        #spline-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+        #spline-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; }
+        #spline-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: var(--body-overlay);
+            pointer-events: none;
+            z-index: 1;
+            transition: background 0.3s ease;
+        }
+        spline-viewer { width: 100%; height: 100%; display: block; }
 
         .master-container { position: relative; z-index: 10; display: grid; grid-template-columns: 420px 1fr; gap: 30px; padding: 30px; height: 100vh; max-width: 1600px; margin: 0 auto; pointer-events: none; }
 
-        .chat-side { pointer-events: auto; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; }
-        .chat-header { padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: center; align-items: center; }
-        .chat-header h5 { margin: 0; font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; color: var(--accent); }
+        .chat-side { pointer-events: auto; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: var(--card-shadow); display: flex; flex-direction: column; overflow: hidden; }
+        .chat-header { padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: center; align-items: center; }
+        .chat-header h5 { margin: 0; font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; color: var(--title-color); }
         #messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
         #messages::-webkit-scrollbar { width: 6px; }
         #messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .msg { max-width: 85%; padding: 12px 18px; border-radius: 16px; font-size: 0.95rem; line-height: 1.5; box-shadow: 0 4px 15px rgba(0,0,0,0.03); animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .user { align-self: flex-end; background: var(--user-msg); color: white; border-bottom-right-radius: 4px; }
-        .ai { align-self: flex-start; background: var(--ai-msg); color: var(--text-main); border-bottom-left-radius: 4px; border: 1px solid rgba(0,0,0,0.05); }
+        .ai { align-self: flex-start; background: var(--ai-msg); color: var(--ai-text, var(--text-main)); border-bottom-left-radius: 4px; border: 1px solid rgba(0,0,0,0.05); }
         .ai-avatar { font-size: 0.7rem; color: var(--accent); font-weight: 700; display: block; margin-bottom: 5px; }
 
-        .quick-prompts { display: flex; gap: 8px; overflow-x: auto; padding: 10px 20px 0 20px; background: rgba(255,255,255,0.4); border-top: 1px solid rgba(0,0,0,0.05); scrollbar-width: none; }
+        .quick-prompts { display: flex; gap: 8px; overflow-x: auto; padding: 10px 20px 0 20px; background: transparent; border-top: 1px solid var(--glass-border); scrollbar-width: none; }
         .quick-prompts::-webkit-scrollbar { display: none; }
-        .prompt-chip { background: white; border: 1px solid #cbd5e1; color: var(--text-main); padding: 8px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; white-space: nowrap; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .prompt-chip { background: var(--chip-bg, white); border: 1px solid var(--chip-border, #cbd5e1); color: var(--text-main); padding: 8px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; white-space: nowrap; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .prompt-chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-
-        .chat-input-area { padding: 15px 20px; background: rgba(255,255,255,0.4); }
-        .input-wrapper { background: white; border-radius: 16px; padding: 5px 5px 5px 15px; display: flex; align-items: center; border: 1px solid #e2e8f0; }
-        input { flex: 1; border: none; background: transparent; color: var(--text-main); outline: none; font-size: 0.95rem; }
+        .prompt-chip.chip-highlight { background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(59,130,246,0.1)); border-color: rgba(37,99,235,0.4); color: var(--accent); font-weight: 600; }
+        
+        .chat-input-area { padding: 15px 20px; background: transparent; }
+        .input-wrapper { background: var(--input-bg, white) !important; border-radius: 16px; padding: 5px 5px 5px 15px; display: flex; align-items: center; border: 1px solid var(--input-border, #e2e8f0) !important; }
+        input { flex: 1; border: none; background: transparent; color: var(--input-text, var(--text-main)); outline: none; font-size: 0.95rem; }
         .send-btn { background: var(--accent); color: white; border: none; width: 40px; height: 40px; border-radius: 12px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         .send-btn:hover { transform: scale(1.05); background: #1d4ed8; }
         .bottom-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.8rem; }
@@ -64,42 +88,148 @@
         .lang-toggle span.active { color: var(--accent); }
 
         .stage-side { display: flex; flex-direction: column; }
-        .stage-header { pointer-events: auto; padding: 15px 30px; display: flex; justify-content: flex-end; gap: 15px; }
-        .stage-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 20px; color: var(--text-main); font-size: 0.85rem; font-weight: 600; transition: 0.3s; display: flex; align-items: center; }
+        .stage-header { pointer-events: auto; padding: 15px 30px; display: flex; justify-content: flex-end; align-items: center; gap: 15px; }
+        .stage-btn { background: var(--btn-bg); border: 1px solid var(--btn-border); padding: 8px 15px; border-radius: 20px; color: var(--btn-text, var(--text-main)); font-size: 0.85rem; font-weight: 600; transition: 0.3s; display: flex; align-items: center; }
         .stage-btn:hover { border-color: var(--accent); color: var(--accent); }
         .dynamic-stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px; text-align: center; }
-        .idle-content { pointer-events: auto; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 24px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); width: 100%; max-width: 800px; margin: 0 auto; transition: all 0.4s ease; }
+        .idle-content { pointer-events: auto; background: var(--stage-card-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--stage-card-border); border-radius: 24px; padding: 40px; box-shadow: var(--card-shadow); width: 100%; max-width: 800px; margin: 0 auto; transition: all 0.4s ease; color: var(--text-main); }
         
         .driver-popover { font-family: 'Inter', sans-serif; border-radius: 16px; padding: 20px; }
         .driver-popover-title { font-weight: 700; color: #2563eb; font-size: 1.1rem; }
         .driver-popover-description { color: #475569; font-size: 0.95rem; line-height: 1.5; }
+
+        /* Logo pulse animation */
+        @keyframes logoPulse {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.35)); }
+            50% { filter: drop-shadow(0 0 16px rgba(124, 58, 237, 0.55)); }
+        }
+        .sirdas-logo { animation: logoPulse 3s ease-in-out infinite; }
+
+        /* Typing indicator */
+        @keyframes typingDot { 0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+        .typing-dots span { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin: 0 2px; animation: typingDot 1.4s ease-in-out infinite; }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        /* Idle logo */
+        .idle-logo-svg { width: 64px; height: 64px; margin-bottom: 20px; filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.3)); }
+
+        /* Mobil uyumluluk */
+        @media (max-width: 768px) {
+            body, html {
+                height: auto;
+                overflow: auto;
+            }
+            .master-container {
+                display: flex;
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+                height: auto !important;
+                min-height: auto;
+                max-width: 100%;
+            }
+            .chat-side {
+                height: 55vh;
+                border-radius: 16px;
+            }
+            .stage-side {
+                height: auto;
+                min-height: 45vh;
+            }
+            .dynamic-stage {
+                height: auto;
+                min-height: 40vh;
+            }
+            .idle-content {
+                padding: 20px;
+            }
+            .chat-header h5 {
+                font-size: 1rem;
+            }
+            .msg {
+                font-size: 0.9rem;
+                padding: 10px 14px;
+            }
+            .idle-content h1 {
+                font-size: 2rem;
+            }
+            .idle-content p {
+                font-size: 0.9rem;
+            }
+            .stage-header {
+                padding: 10px 20px;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .stage-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            .quick-prompts {
+                padding: 8px 10px 0 10px;
+            }
+            .prompt-chip {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
+            .chat-input-area {
+                padding: 10px 10px;
+            }
+            .input-wrapper {
+                padding: 4px 4px 4px 10px;
+            }
+            input {
+                font-size: 0.9rem;
+            }
+            .send-btn {
+                width: 36px;
+                height: 36px;
+            }
+            .bottom-controls {
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div id="spline-container">
-        <spline-viewer url="https://prod.spline.design/icQ-1NuRE4NOH2OB/scene.splinecode" events-target="global"></spline-viewer>
-    </div>
+    <!-- Spline 3D arka plan — mobilde yüklenmez -->
+    <div id="spline-container"></div>
 
     <div class="master-container">
         
         <section class="chat-side" id="tour-chat">
             <div class="chat-header">
-                <h5>SIRDAŞ AI <span>v3</span></h5>
+                <svg class="sirdas-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="32" height="32" style="margin-right: 10px; flex-shrink: 0;">
+                    <defs><linearGradient id="hdr-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+                    <rect x="3" y="2" width="34" height="26" rx="8" fill="url(#hdr-grad)"/>
+                    <polygon points="9,28 9,37 18,28" fill="url(#hdr-grad)"/>
+                    <circle cx="20" cy="11" r="3.2" fill="white" opacity="0.95"/>
+                    <circle cx="12.5" cy="22" r="2.2" fill="white" opacity="0.7"/>
+                    <circle cx="27.5" cy="22" r="2.2" fill="white" opacity="0.7"/>
+                    <line x1="20" y1="11" x2="12.5" y2="22" stroke="white" stroke-width="1.5" opacity="0.4"/>
+                    <line x1="20" y1="11" x2="27.5" y2="22" stroke="white" stroke-width="1.5" opacity="0.4"/>
+                    <line x1="12.5" y1="22" x2="27.5" y2="22" stroke="white" stroke-width="1.5" opacity="0.4"/>
+                    <circle cx="20" cy="11" r="6" fill="none" stroke="white" stroke-width="0.8" opacity="0.2"/>
+                </svg>
+                <h5 style="margin: 0;">SIRDAŞ AI <span style="font-size: 0.7rem; opacity: 0.6; font-weight: 400;">v3</span></h5>
             </div>
 
             <div id="messages">
                 <div class="msg ai">
                     <span class="ai-avatar">AI ASİSTAN</span>
-                    Merhaba! Ben Ahmet Babli Çulcu'nun dijital asistanı Sırdaş. Sistem hazır. Aşağıdaki hızlı konulardan birini seçebilir veya kendi sorunuzu yazabilirsiniz.
+                    Merhaba! 👋 Ben <strong>Sırdaş</strong> — Ahmet'in dijital asistanı.<br><br>Ahmet, dijital dünyada estetikle mühendisliği kusursuz bir dengeyle birleştiriyor. Modern yazılım teknolojileri ve yapay zeka mimarileri üzerinde çalışarak yüksek performanslı çözümler inşa ediyor.<br><br>Projelerini keşfetmek, teknik yeteneklerini öğrenmek veya doğrudan iletişime geçmek için aşağıdaki konulardan birini seçebilirsin.
                 </div>
             </div>
 
             <div class="quick-prompts" id="quickPrompts">
-                <div class="prompt-chip" onclick="hizliSor(this, 'Sistemi bana tanıt. Sırdaş nedir?')"><i class="fas fa-magic me-1"></i> Sistemi Tanıt</div>
-                <div class="prompt-chip" onclick="hizliSor(this, 'TrikoPatron ERP projesi nedir?')"><i class="fas fa-box-open me-1"></i> TrikoPatron</div>
-                <div class="prompt-chip" onclick="hizliSor(this, 'Hangi yazılım dillerini kullanıyor?')"><i class="fas fa-code me-1"></i> Yetenekler</div>
-                <div class="prompt-chip" onclick="hizliSor(this, 'İletişim bilgileri nelerdir?')"><i class="fas fa-envelope me-1"></i> İletişim</div>
+                <div class="prompt-chip chip-highlight" onclick="hizliSor(this, 'Ahmet Babli Çulcu hakkında her şeyi anlat. Eğitimi, projeleri, yetenekleri ve kariyer hedefleri neler?')"><i class="fas fa-user-tie me-1"></i> <span class="chip-label">Ahmet'i Tanı</span></div>
+                <div class="prompt-chip" onclick="hizliSor(this, 'TrikoPatron ERP projesi nedir? Detaylı anlat.')"><i class="fas fa-box-open me-1"></i> <span class="chip-label">TrikoPatron</span></div>
+                <div class="prompt-chip" onclick="hizliSor(this, 'Kariyer Ajansı projesi nedir? Nasıl çalışıyor?')"><i class="fas fa-rocket me-1"></i> <span class="chip-label">Kariyer Ajansı</span></div>
+                <div class="prompt-chip" onclick="hizliSor(this, 'Hangi yazılım dillerini ve teknolojileri kullanıyor?')"><i class="fas fa-code me-1"></i> <span class="chip-label">Yetenekler</span></div>
+                <div class="prompt-chip" onclick="hizliSor(this, 'İletişim bilgileri nelerdir?')"><i class="fas fa-envelope me-1"></i> <span class="chip-label">İletişim</span></div>
+                <div class="prompt-chip" onclick="hizliSor(this, 'Sistemi bana tanıt. Sırdaş nedir?')"><i class="fas fa-wand-magic-sparkles me-1"></i> <span class="chip-label">Site Turu</span></div>
             </div>
 
             <div class="chat-input-area">
@@ -118,18 +248,31 @@
         <section class="stage-side" id="tour-portfolio">
             <div class="stage-header">
                 <a href="/yonetici" class="stage-btn" id="tour-admin"><i class="fas fa-user-shield me-2"></i><span class="lang-text" data-tr="Yönetici" data-en="Admin">Yönetici</span></a>
-                <a href="/cv_olustur" class="stage-btn" id="tour-cv"><i class="fas fa-download me-2"></i><span class="lang-text" data-tr="CV İndir" data-en="Download CV">CV İndir</span></a>
+                <a href="/static/Ahmet_Babli_CV.pdf" download class="stage-btn" id="tour-cv"><i class="fas fa-download me-2"></i><span class="lang-text" data-tr="CV İndir" data-en="Download CV">CV İndir</span></a>
                 <a href="https://github.com/AhmetBabli" target="_blank" class="stage-btn"><i class="fab fa-github text-dark"></i></a>
                 <a href="https://www.linkedin.com/in/ahmetbabli7/" target="_blank" class="stage-btn"><i class="fab fa-linkedin" style="color: #0a66c2;"></i></a>
                 <a href="https://instagram.com/ahmetbabli7" target="_blank" class="stage-btn"><i class="fab fa-instagram" style="color: #e1306c;"></i></a>
                 <a href="mailto:ahmetbablic7@gmail.com" class="stage-btn"><i class="fas fa-envelope text-secondary"></i></a>
+                <button onclick="togglePageTheme()" class="stage-btn" style="cursor: pointer;" title="Tema Değiştir"><i class="fas fa-adjust text-warning"></i></button>
             </div>
 
             <div class="dynamic-stage" id="portfolioDisplay">
                 <div class="idle-content text-center">
-                    <h1 style="font-weight: 800; font-size: 2.5rem; letter-spacing: -1px;">AHMET BABLİ ÇULCU</h1>
+                    <svg class="idle-logo-svg sirdas-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+                        <defs><linearGradient id="idle-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+                        <rect x="3" y="2" width="34" height="26" rx="8" fill="url(#idle-grad)"/>
+                        <polygon points="9,28 9,37 18,28" fill="url(#idle-grad)"/>
+                        <circle cx="20" cy="11" r="3.2" fill="white" opacity="0.95"/>
+                        <circle cx="12.5" cy="22" r="2.2" fill="white" opacity="0.7"/>
+                        <circle cx="27.5" cy="22" r="2.2" fill="white" opacity="0.7"/>
+                        <line x1="20" y1="11" x2="12.5" y2="22" stroke="white" stroke-width="1.5" opacity="0.4"/>
+                        <line x1="20" y1="11" x2="27.5" y2="22" stroke="white" stroke-width="1.5" opacity="0.4"/>
+                        <line x1="12.5" y1="22" x2="27.5" y2="22" stroke="white" stroke-width="1.5" opacity="0.4"/>
+                        <circle cx="20" cy="11" r="6" fill="none" stroke="white" stroke-width="0.8" opacity="0.2"/>
+                    </svg>
+                    <h1 style="font-weight: 800; font-size: 2.5rem; letter-spacing: -1px; color: var(--text-main);">AHMET BABLİ ÇULCU</h1>
                     <p style="color: var(--text-sub); font-size: 1.1rem;" id="idle-desc">Yönetim Bilişim Sistemleri & Python/Flask Geliştiricisi</p>
-                    <p class="text-muted mt-4" style="font-size: 0.9rem;" id="idle-sub"><i class="fas fa-magic me-2"></i>Sırdaş'a proje sorun, analiz grafikleri ve sistem detayları burada görüntülensin.</p>
+                    <p class="text-muted mt-4" style="font-size: 0.9rem; color: var(--text-sub) !important;" id="idle-sub"><i class="fas fa-wand-magic-sparkles me-2"></i>Sırdaş'a proje sorun, analiz grafikleri ve sistem detayları burada görüntülensin.</p>
                 </div>
             </div>
         </section>
@@ -138,12 +281,37 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        function updateDateTime() { const now = new Date(); document.getElementById('liveDateTime').innerText = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }); }
-        setInterval(updateDateTime, 1000); updateDateTime();
+        // ── Spline 3D — Masaüstü için yükle ve hata durumunu kontrol et ─────────
+        (function() {
+            var script = document.createElement('script');
+            script.type = 'module';
+            script.src = 'https://unpkg.com/@splinetool/viewer@1.12.74/build/spline-viewer.js';
+            document.head.appendChild(script);
 
+            script.onload = function() {
+                var container = document.getElementById('spline-container');
+                if (container) {
+                    container.innerHTML = '<spline-viewer url="https://prod.spline.design/icQ-1NuRE4NOH2OB/scene.splinecode" events-target="global"></spline-viewer>';
+                }
+            };
+
+            script.onerror = function() {
+                console.error('Spline viewer yüklenemedi. Ağ veya kaynak erişim sorununu kontrol edin.');
+            };
+        })();
+
+        // ── Saat ─────────────────────────────────────────────────────────────
+        function updateDateTime() {
+            var now = new Date();
+            document.getElementById('liveDateTime').innerText = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        // ── Mesaj Yardımcıları ───────────────────────────────────────────────
         function appendUserMessage(text) {
-            const messages = document.getElementById("messages");
-            const msgDiv = document.createElement("div");
+            var messages = document.getElementById("messages");
+            var msgDiv = document.createElement("div");
             msgDiv.className = "msg user";
             msgDiv.textContent = text;
             messages.appendChild(msgDiv);
@@ -151,15 +319,15 @@
         }
 
         function appendAiMessage(text) {
-            const messages = document.getElementById("messages");
-            const msgDiv = document.createElement("div");
+            var messages = document.getElementById("messages");
+            var msgDiv = document.createElement("div");
             msgDiv.className = "msg ai";
 
-            const avatar = document.createElement("span");
+            var avatar = document.createElement("span");
             avatar.className = "ai-avatar";
             avatar.textContent = "AI ASİSTAN";
 
-            const body = document.createTextNode(text);
+            var body = document.createTextNode(text);
             msgDiv.appendChild(avatar);
             msgDiv.appendChild(body);
             messages.appendChild(msgDiv);
@@ -167,63 +335,66 @@
         }
 
         function appendSystemNotice(text) {
-            const messages = document.getElementById("messages");
-            const msgDiv = document.createElement("div");
+            var messages = document.getElementById("messages");
+            var msgDiv = document.createElement("div");
             msgDiv.className = "msg ai";
             msgDiv.style.background = "rgba(37, 99, 235, 0.05)";
             msgDiv.style.borderLeft = "3px solid #2563eb";
             msgDiv.style.fontSize = "0.85rem";
             msgDiv.style.padding = "10px";
 
-            const icon = document.createElement("i");
+            var icon = document.createElement("i");
             icon.className = "fas fa-globe me-2 text-primary";
             msgDiv.appendChild(icon);
-            msgDiv.appendChild(document.createTextNode(` ${text}`));
+            msgDiv.appendChild(document.createTextNode(" " + text));
             messages.appendChild(msgDiv);
             messages.scrollTop = messages.scrollHeight;
         }
 
         function appendLoadingMessage(id, text) {
-            const messages = document.getElementById("messages");
-            const msgDiv = document.createElement("div");
+            var messages = document.getElementById("messages");
+            var msgDiv = document.createElement("div");
             msgDiv.className = "msg ai";
             msgDiv.id = id;
 
-            const avatar = document.createElement("span");
+            var avatar = document.createElement("span");
             avatar.className = "ai-avatar";
             avatar.textContent = "AI ASİSTAN";
 
-            const spinner = document.createElement("i");
-            spinner.className = "fas fa-circle-notch fa-spin";
+            var dotsContainer = document.createElement("span");
+            dotsContainer.className = "typing-dots";
+            dotsContainer.innerHTML = "<span></span><span></span><span></span>";
 
             msgDiv.appendChild(avatar);
-            msgDiv.appendChild(spinner);
-            msgDiv.appendChild(document.createTextNode(` ${text}`));
+            msgDiv.appendChild(dotsContainer);
+            msgDiv.appendChild(document.createTextNode(" " + text));
             messages.appendChild(msgDiv);
             messages.scrollTop = messages.scrollHeight;
         }
 
         function appendErrorMessage(text) {
-            const messages = document.getElementById("messages");
-            const msgDiv = document.createElement("div");
+            var messages = document.getElementById("messages");
+            var msgDiv = document.createElement("div");
             msgDiv.className = "msg ai";
             msgDiv.style.borderLeft = "3px solid #ef4444";
 
-            const avatar = document.createElement("span");
+            var avatar = document.createElement("span");
             avatar.className = "ai-avatar text-danger";
             avatar.textContent = "ERROR";
 
             msgDiv.appendChild(avatar);
             msgDiv.appendChild(document.createTextNode(text));
             messages.appendChild(msgDiv);
+            messages.scrollTop = messages.scrollHeight;
         }
 
-        document.querySelectorAll('.lang-toggle span').forEach(span => {
+        // ── Dil Değiştirme ───────────────────────────────────────────────────
+        document.querySelectorAll('.lang-toggle span').forEach(function(span) {
             span.addEventListener('click', function() {
-                document.querySelectorAll('.lang-toggle span').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.lang-toggle span').forEach(function(s) { s.classList.remove('active'); });
                 this.classList.add('active');
                 
-                const isEn = this.innerText.toLowerCase() === 'en';
+                var isEn = this.innerText.toLowerCase() === 'en';
                 
                 // Input ve Idle ekranı çevirisi
                 document.getElementById('userInput').placeholder = isEn ? "Start a system query..." : "Sistem sorgusu başlatın...";
@@ -231,26 +402,24 @@
                 document.getElementById('idle-sub').innerHTML = isEn ? "<i class='fas fa-magic me-2'></i>Ask Sırdaş about projects, analysis graphs, and system details will be displayed here." : "<i class='fas fa-magic me-2'></i>Sırdaş'a proje sorun, analiz grafikleri ve sistem detayları burada görüntülensin.";
                 
                 // Üst buton çevirileri
-                document.querySelectorAll('.lang-text').forEach(el => {
+                document.querySelectorAll('.lang-text').forEach(function(el) {
                     el.innerText = isEn ? el.getAttribute('data-en') : el.getAttribute('data-tr');
                 });
 
                 // Hızlı Çip çevirileri
-                const chips = document.getElementById('quickPrompts').children;
-                if(chips.length > 0) {
-                    chips[0].innerHTML = isEn ? "<i class='fas fa-magic me-1'></i> System Tour" : "<i class='fas fa-magic me-1'></i> Sistemi Tanıt";
-                    chips[1].innerHTML = isEn ? "<i class='fas fa-box-open me-1'></i> TrikoPatron" : "<i class='fas fa-box-open me-1'></i> TrikoPatron";
-                    chips[2].innerHTML = isEn ? "<i class='fas fa-code me-1'></i> Skills" : "<i class='fas fa-code me-1'></i> Yetenekler";
-                    chips[3].innerHTML = isEn ? "<i class='fas fa-envelope me-1'></i> Contact" : "<i class='fas fa-envelope me-1'></i> İletişim";
-                }
+                var chips = document.getElementById('quickPrompts').querySelectorAll('.chip-label');
+                var chipTexts = isEn
+                    ? ['Meet Ahmet', 'TrikoPatron', 'Career Agency', 'Skills', 'Contact', 'Site Tour']
+                    : ["Ahmet'i Tanı", 'TrikoPatron', 'Kariyer Ajansı', 'Yetenekler', 'İletişim', 'Site Turu'];
+                chips.forEach(function(el, i) { if(chipTexts[i]) el.textContent = chipTexts[i]; });
 
                 // AI Asistan ilk karşılama mesajını da anlık çevir
-                const firstMsg = document.querySelector('#messages .msg.ai');
+                var firstMsg = document.querySelector('#messages .msg.ai');
                 if (firstMsg) {
                     if (firstMsg.innerText.includes('Merhaba') || firstMsg.innerText.includes('Hello')) {
                         firstMsg.innerHTML = isEn 
-                            ? '<span class="ai-avatar">AI ASSISTANT</span>Hello! I am Sırdaş, Ahmet Babli Çulcu\'s digital assistant. System ready. You can select a quick topic below or type your question.'
-                            : '<span class="ai-avatar">AI ASİSTAN</span>Merhaba! Ben Ahmet Babli Çulcu\'nun dijital asistanı Sırdaş. Sistem hazır. Aşağıdaki hızlı konulardan birini seçebilir veya kendi sorunuzu yazabilirsiniz.';
+                            ? '<span class="ai-avatar">AI ASSISTANT</span>Hello! 👋 I am <strong>Sırdaş</strong> — Ahmet\'s AI-powered digital assistant. Explore his projects, discover his skills, or reach out directly by selecting a topic below.'
+                            : '<span class="ai-avatar">AI ASİSTAN</span>Merhaba! 👋 Ben <strong>Sırdaş</strong> — Ahmet\'in yapay zeka destekli dijital asistanı. Projelerini keşfetmek, teknik yeteneklerini öğrenmek veya doğrudan iletişime geçmek için aşağıdaki konulardan birini seçin.';
                     }
                 }
 
@@ -259,161 +428,237 @@
             });
         });
 
+        // ── Hızlı Soru ──────────────────────────────────────────────────────
         function hizliSor(element, soru) {
-            const isEn = document.querySelector('.lang-toggle span.active').innerText.toLowerCase() === 'en';
+            var isEn = document.querySelector('.lang-toggle span.active').innerText.toLowerCase() === 'en';
             
-            // Eğer İngilizce seçiliyse Türkçe tıklandığında bile soruyu İngilizce'ye çevirerek bota yolla
-            let finalQuestion = soru;
+            var finalQuestion = soru;
             if(isEn) {
-                if(soru.includes("Sistemi bana tanıt")) finalQuestion = "Introduce the system to me. What is Sırdaş?";
-                if(soru.includes("TrikoPatron ERP")) finalQuestion = "What is the TrikoPatron ERP project?";
-                if(soru.includes("Hangi yazılım")) finalQuestion = "What programming languages and skills does he use?";
+                if(soru.includes("Ahmet Babli")) finalQuestion = "Tell me everything about Ahmet Babli Çulcu — his education, projects, skills and career goals.";
+                if(soru.includes("TrikoPatron ERP")) finalQuestion = "What is the TrikoPatron ERP project? Give me the details.";
+                if(soru.includes("Kariyer Ajansı")) finalQuestion = "What is the Career Agency project? How does it work?";
+                if(soru.includes("Hangi yazılım")) finalQuestion = "What programming languages and technologies does he use?";
                 if(soru.includes("İletişim bilgileri")) finalQuestion = "What is his contact information?";
+                if(soru.includes("Sistemi bana tanıt")) finalQuestion = "Introduce the system to me. What is Sırdaş?";
             }
             
             document.getElementById('userInput').value = finalQuestion;
             sendMessage();
             
-            // Sadece tıklanan soruyu gizle
-            if (element) {
-                element.style.display = 'none';
+            if (element) { element.style.display = 'none'; }
+        }
+
+        function togglePageTheme() {
+            var current = document.documentElement.getAttribute('data-theme') || 'light';
+            applyPageTheme(current === 'dark' ? 'light' : 'dark');
+        }
+
+        function applyPageTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('sirdas_page_theme', theme);
+            
+            if (theme === 'light') {
+                document.documentElement.style.setProperty('--body-fallback', '#ffffff');
+                document.documentElement.style.setProperty('--text-main', '#0f172a');
+                document.documentElement.style.setProperty('--text-sub', '#64748b');
+                document.documentElement.style.setProperty('--glass-bg', '#ffffff');
+                document.documentElement.style.setProperty('--stage-card-bg', '#ffffff');
+                
+                document.documentElement.style.setProperty('--ai-msg', '#4b5563'); 
+                document.documentElement.style.setProperty('--ai-text', '#ffffff');
+                document.documentElement.style.setProperty('--input-bg', '#4b5563');
+                document.documentElement.style.setProperty('--input-text', '#ffffff');
+                document.documentElement.style.setProperty('--btn-bg', '#4b5563');
+                document.documentElement.style.setProperty('--btn-text', '#ffffff');
+                document.documentElement.style.setProperty('--chip-bg', '#e2e8f0');
+                
+                // Animasyonun soluk durmaması için overlay'i kaldırıyoruz
+                document.documentElement.style.setProperty('--body-overlay', 'transparent');
+            } else {
+                document.documentElement.style.setProperty('--body-fallback', '#ffffff');
+                document.documentElement.style.setProperty('--text-main', '#f1f5f9');
+                document.documentElement.style.setProperty('--text-sub', '#94a3b8');
+                document.documentElement.style.setProperty('--glass-bg', '#3b4252'); 
+                document.documentElement.style.setProperty('--stage-card-bg', '#2e3440'); 
+                
+                document.documentElement.style.setProperty('--ai-msg', '#1e293b');
+                document.documentElement.style.setProperty('--ai-text', '#f1f5f9');
+                document.documentElement.style.setProperty('--input-bg', '#1e293b');
+                document.documentElement.style.setProperty('--input-text', '#f1f5f9');
+                document.documentElement.style.setProperty('--btn-bg', '#1e293b');
+                document.documentElement.style.setProperty('--btn-text', '#f1f5f9');
+                document.documentElement.style.setProperty('--chip-bg', '#1e293b');
+                
+                document.documentElement.style.setProperty('--body-overlay', 'transparent');
             }
         }
 
+        (function() {
+            var saved = localStorage.getItem('sirdas_page_theme');
+            var sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            applyPageTheme(saved || sys);
+        })();
+
+        // ── Dinamik Sahne Güncelleme ─────────────────────────────────────────
+        function updateStage(gorsel, isEn) {
+            var stage = document.getElementById('portfolioDisplay');
+
+            if(gorsel === 'sirdas_tour') {
+                stage.innerHTML =
+                    '<div class="idle-content text-center" style="animation: fadeIn 0.5s ease-in-out;">' +
+                        '<i class="fas fa-route fa-4x text-primary mb-3"></i>' +
+                        '<h2 style="font-weight: 800; color: var(--text-main);">' + (isEn ? 'System Tour Starting' : 'Sistem Turu Başlıyor') + '</h2>' +
+                        '<p class="mt-3 text-muted" style="color: var(--text-sub) !important;">' + (isEn ? 'Follow the interface guide.' : 'Arayüz rehberini takip edin.') + '</p>' +
+                    '</div>';
+                
+                var driverObj = window.driver.js.driver({
+                    showProgress: true, animate: true,
+                    nextBtnText: isEn ? 'Next ➔' : 'İleri ➔',
+                    prevBtnText: isEn ? '⬅ Prev' : '⬅ Geri',
+                    doneBtnText: isEn ? 'Done' : 'Bitir',
+                    steps: isEn ? [
+                        { popover: { title: 'Sırdaş AI v3', description: 'Welcome to the digital portfolio system. Let me show you how this site works.' } },
+                        { element: '#tour-admin', popover: { title: 'Admin Panel (Data Center)', description: 'Ahmet manages his profile, skills, and portfolio instantly from this secure area.', side: "bottom", align: 'start' }},
+                        { element: '#tour-cv', popover: { title: 'Auto CV (n8n)', description: 'When data is updated, the n8n automation triggers and generates an instant PDF CV via Google API.', side: "bottom", align: 'start' }},
+                        { element: '#tour-portfolio', popover: { title: 'Dynamic Portfolio Stage', description: 'The era of static pages is over. When you chat with me, projects and graphs are instantly visualized right here.', side: "left", align: 'start' }},
+                        { element: '#tour-chat', popover: { title: 'AI Brain (Me)', description: 'I run on Google Gemini Flash architecture. I analyze your questions and manage the stage on the right. Let\'s start chatting!', side: "right", align: 'start' }}
+                    ] : [
+                        { popover: { title: 'Sırdaş AI v3', description: 'Dijital portfolyo sistemine hoş geldiniz. Şimdi size bu sitenin nasıl çalıştığını göstereceğim.' } },
+                        { element: '#tour-admin', popover: { title: 'Yönetici Paneli (Veri Merkezi)', description: 'Ahmet Bey profilini, yeteneklerini ve portfolyosunu bu güvenli alandan anlık olarak yönetir.', side: "bottom", align: 'start' }},
+                        { element: '#tour-cv', popover: { title: 'Otomatik CV (n8n)', description: 'Ahmet Bey verileri güncellediğinde, n8n otomasyonu devreye girer ve Google API aracılığıyla anlık PDF CV üretir.', side: "bottom", align: 'start' }},
+                        { element: '#tour-portfolio', popover: { title: 'Dinamik Portfolyo Sahnesi', description: 'Statik sayfalar devri bitti. Benimle sohbet ettiğinizde projeler ve grafikler tam burada görselleştirilir.', side: "left", align: 'start' }},
+                        { element: '#tour-chat', popover: { title: 'Yapay Zeka Beyni (Ben)', description: 'Ben Google Gemini Flash mimarisiyle çalışıyorum. Sorularınızı analiz eder ve sağdaki sahneyi ben yönetirim. Hadi başlayalım!', side: "right", align: 'start' }}
+                    ]
+                });
+                driverObj.drive();
+            }
+            else if(gorsel === 'trikopatron') {
+                stage.innerHTML =
+                    '<div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">' +
+                        '<div class="row align-items-center">' +
+                            '<div class="col-md-6">' +
+                                '<span class="badge bg-success mb-2 px-3 py-2 shadow-sm">' + (isEn ? 'Completed Project' : 'Tamamlanan Proje') + '</span>' +
+                                '<h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-box-open text-success"></i> TrikoPatron ERP</h2>' +
+                                '<p class="mt-3 text-muted" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-sub) !important;">' + (isEn ? 'End-to-end management panel for textile businesses.' : 'Tekstil işletmeleri için baştan uca yönetim paneli.') + '</p>' +
+                                '<div class="mt-4 p-3 border rounded shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;">' +
+                                    '<p class="mb-2"><strong><i class="fas fa-microchip text-primary me-2"></i>' + (isEn ? 'Technologies' : 'Teknoloji') + ':</strong> Python, Flask, SQL</p>' +
+                                    '<p class="mb-0 text-muted" style="font-size: 0.9rem; color: var(--text-sub) !important;"><i class="fas fa-check-circle text-success me-2"></i>' + (isEn ? 'Order and stock integration.' : 'Sipariş ve stok entegrasyonu.') + '</p>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="col-md-6 mt-4 mt-md-0">' +
+                                '<div id="trikoCarousel" class="carousel slide carousel-fade shadow-lg rounded" data-bs-ride="carousel" style="border: 1px solid var(--glass-border); overflow: hidden;">' +
+                                    '<div class="carousel-inner">' +
+                                        '<div class="carousel-item active"><img src="/static/images/triko1.png" class="d-block w-100" alt="Screen 1"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Secure Login' : 'Güvenli Yönetici Girişi') + '</h6></div></div>' +
+                                        '<div class="carousel-item"><img src="/static/images/triko2.png" class="d-block w-100" alt="Screen 2"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Dashboard Panel' : 'Sipariş Takip Paneli') + '</h6></div></div>' +
+                                        '<div class="carousel-item"><img src="/static/images/triko3.png" class="d-block w-100" alt="Screen 3"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'PDF Reports' : 'PDF Raporlama & Fiş') + '</h6></div></div>' +
+                                    '</div>' +
+                                    '<button class="carousel-control-prev" type="button" data-bs-target="#trikoCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>' +
+                                    '<button class="carousel-control-next" type="button" data-bs-target="#trikoCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+            }
+            else if(gorsel === 'kariyer_ajans') {
+                stage.innerHTML =
+                    '<div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">' +
+                        '<div class="row align-items-center">' +
+                            '<div class="col-md-7">' +
+                                '<span class="badge mb-2 px-3 py-2 shadow-sm" style="background: linear-gradient(135deg, #2563eb, #7c3aed); color: white;">' + (isEn ? 'Active Project' : 'Aktif Proje') + '</span>' +
+                                '<h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-rocket" style="color: #7c3aed;"></i> ' + (isEn ? 'Career Agency' : 'Kariyer Ajansı') + '</h2>' +
+                                '<p class="mt-3" style="font-size: 1.05rem; line-height: 1.7; color: var(--text-sub);">' + (isEn ? 'AI-powered career automation platform with real-time job scraping, personalized recommendations, and n8n workflow integration.' : 'Yapay zeka destekli kariyer otomasyon platformu. Gerçek zamanlı iş ilanı toplama, kişiselleştirilmiş öneriler ve n8n iş akışı entegrasyonu.') + '</p>' +
+                                '<div class="mt-4 p-3 border rounded shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;">' +
+                                    '<p class="mb-2"><strong><i class="fas fa-microchip text-primary me-2"></i>' + (isEn ? 'Stack' : 'Teknoloji') + ':</strong> Python, Flask, React, n8n, Playwright</p>' +
+                                    '<p class="mb-2"><strong><i class="fas fa-globe text-info me-2"></i>' + (isEn ? 'Status' : 'Durum') + ':</strong> <span class="badge bg-success">' + (isEn ? 'Live on Domain' : 'Canlı Yayında') + '</span></p>' +
+                                    '<p class="mb-0 text-muted" style="font-size: 0.9rem; color: var(--text-sub) !important;"><i class="fas fa-check-circle text-success me-2"></i>' + (isEn ? 'Full-stack development by Ahmet.' : 'Frontend ve backend tamamen Ahmet tarafından geliştirildi.') + '</p>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="col-md-5 mt-4 mt-md-0 text-center">' +
+                                '<div class="p-4 border rounded shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;">' +
+                                    '<i class="fas fa-robot fa-4x mb-3" style="color: #7c3aed;"></i>' +
+                                    '<h5 style="font-weight: 700; color: var(--text-main);">' + (isEn ? 'AI-Powered' : 'Yapay Zeka Destekli') + '</h5>' +
+                                    '<p class="text-muted mb-0" style="font-size: 0.85rem; color: var(--text-sub) !important;">Gemini API + Playwright + n8n</p>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+            }
+            else if(gorsel === 'yetenekler') {
+                stage.innerHTML =
+                    '<div class="idle-content text-start">' +
+                        '<span class="badge bg-danger mb-2 px-3 py-2">' + (isEn ? 'Technical Infrastructure' : 'Teknik Altyapı') + '</span>' +
+                        '<h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-code text-danger"></i> ' + (isEn ? 'Technologies Used' : 'Kullanılan Teknolojiler') + '</h2>' +
+                        '<p class="mt-3 text-muted" style="color: var(--text-sub) !important;">' + (isEn ? 'Core tools used in system architecture and AI automations.' : 'Sistem mimarisinde ve yapay zeka otomasyonlarında kullanılan temel araçlar.') + '</p>' +
+                        '<div class="row mt-4">' +
+                            '<div class="col-6 mb-3"><div class="p-3 border rounded text-center shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;"><i class="fab fa-python fa-2x text-primary mb-2"></i><br><strong style="color: var(--text-main);">Python</strong></div></div>' +
+                            '<div class="col-6 mb-3"><div class="p-3 border rounded text-center shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;"><i class="fas fa-server fa-2x text-secondary mb-2"></i><br><strong style="color: var(--text-main);">Flask</strong></div></div>' +
+                            '<div class="col-6"><div class="p-3 border rounded text-center shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;"><i class="fas fa-database fa-2x text-info mb-2"></i><br><strong style="color: var(--text-main);">SQL</strong></div></div>' +
+                            '<div class="col-6"><div class="p-3 border rounded text-center shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;"><i class="fas fa-robot fa-2x text-warning mb-2"></i><br><strong style="color: var(--text-main);">Gemini AI</strong></div></div>' +
+                        '</div>' +
+                    '</div>';
+            }
+            else if(gorsel === 'iletisim') {
+                stage.innerHTML =
+                    '<div class="idle-content text-center">' +
+                        '<i class="fas fa-paper-plane fa-3x text-primary mb-3"></i>' +
+                        '<h2 style="font-weight: 800; color: var(--text-main);">' + (isEn ? 'Contact Channels' : 'İletişim Kanalları') + '</h2>' +
+                        '<p class="mt-3 text-muted" style="color: var(--text-sub) !important;">' + (isEn ? 'You can contact me directly for your project.' : 'Projeniz için benimle doğrudan iletişime geçebilirsiniz.') + '</p>' +
+                        '<div class="mt-4 d-flex flex-wrap justify-content-center gap-3">' +
+                            '<a href="https://www.linkedin.com/in/ahmetbabli7/" target="_blank" class="btn btn-primary fw-bold px-4 py-3"><i class="fab fa-linkedin me-2"></i>LinkedIn</a>' +
+                            '<a href="https://instagram.com/ahmetbabli7" target="_blank" class="btn btn-outline-danger fw-bold px-4 py-3"><i class="fab fa-instagram me-2"></i>Instagram</a>' +
+                            '<a href="mailto:ahmetbablic7@gmail.com" class="btn btn-dark fw-bold px-4 py-3"><i class="fas fa-envelope me-2"></i>E-Mail</a>' +
+                        '</div>' +
+                    '</div>';
+            }
+            // idle veya bilinmeyen görsel türlerinde varsayılan sahneyi koru
+        }
+
+        // ── Ana Mesaj Gönderme Fonksiyonu ────────────────────────────────────
         async function sendMessage() {
-            const input = document.getElementById("userInput");
-            const messages = document.getElementById("messages");
-            const text = input.value.trim();
-            const isEn = document.querySelector('.lang-toggle span.active').innerText.toLowerCase() === 'en';
-            const activeLang = isEn ? 'en' : 'tr';
+            var input = document.getElementById("userInput");
+            var text = input.value.trim();
+            var isEn = document.querySelector('.lang-toggle span.active').innerText.toLowerCase() === 'en';
+            var activeLang = isEn ? 'en' : 'tr';
 
             if (!text) return;
 
             appendUserMessage(text);
             input.value = "";
 
-            const loadingId = "load-" + Date.now();
+            var loadingId = "load-" + Date.now();
             appendLoadingMessage(loadingId, isEn ? "Processing..." : "İşleniyor...");
 
             try {
-                const response = await fetch("/chat", {
-                    method: "POST", headers: { "Content-Type": "application/json" },
+                var response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ message: text, language: activeLang })
                 });
 
-                const data = await response.json();
-                document.getElementById(loadingId).remove();
+                if (response.status === 429) {
+                    var loadingEl = document.getElementById(loadingId);
+                    if (loadingEl) loadingEl.remove();
+                    appendAiMessage(isEn ? '⏳ Too many requests. Please wait a moment and try again.' : '⏳ Çok fazla istek gönderildi. Lütfen biraz bekleyip tekrar deneyin.');
+                    return;
+                }
 
-                const botReply = data.response || (isEn ? "Error occurred." : "Hata oluştu.");
+                var data = await response.json();
+                var loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+
+                var botReply = data.response || '';
+                var gorsel = data.gorsel || 'idle';
+
                 appendAiMessage(botReply);
+                updateStage(gorsel, isEn);
 
-                const stage = document.getElementById('portfolioDisplay');
-                const gorsel = data.gorsel;
-                
-                // 🔥 GLOBAL DİNAMİK PORTFOLYO SAHNESİ 🔥
-                if(gorsel === 'sirdas_tour') {
-                    stage.innerHTML = `
-                        <div class="idle-content text-center" style="animation: fadeIn 0.5s ease-in-out;">
-                            <i class="fas fa-route fa-4x text-primary mb-3"></i>
-                            <h2 style="font-weight: 800; color: #1e293b;">${isEn ? 'System Tour Starting' : 'Sistem Turu Başlıyor'}</h2>
-                            <p class="mt-3 text-muted">${isEn ? 'Follow the interface guide.' : 'Arayüz rehberini takip edin.'}</p>
-                        </div>`;
-                    
-                    const driverObj = window.driver.js.driver({
-                        showProgress: true, animate: true,
-                        nextBtnText: isEn ? 'Next ➔' : 'İleri ➔',
-                        prevBtnText: isEn ? '⬅ Prev' : '⬅ Geri',
-                        doneBtnText: isEn ? 'Done' : 'Bitir',
-                        steps: isEn ? [
-                            { popover: { title: 'Sırdaş AI v3', description: 'Welcome to the digital portfolio system. Let me show you how this site works.' } },
-                            { element: '#tour-admin', popover: { title: 'Admin Panel (Data Center)', description: 'Ahmet manages his profile, skills, and portfolio instantly from this secure area.', side: "bottom", align: 'start' }},
-                            { element: '#tour-cv', popover: { title: 'Auto CV (n8n)', description: 'When data is updated, the n8n automation triggers and generates an instant PDF CV via Google API.', side: "bottom", align: 'start' }},
-                            { element: '#tour-portfolio', popover: { title: 'Dynamic Portfolio Stage', description: 'The era of static pages is over. When you chat with me, projects and graphs are instantly visualized right here.', side: "left", align: 'start' }},
-                            { element: '#tour-chat', popover: { title: 'AI Brain (Me)', description: 'I run on Google Gemini Flash architecture. I analyze your questions and manage the stage on the right. Let\'s start chatting!', side: "right", align: 'start' }}
-                        ] : [
-                            { popover: { title: 'Sırdaş AI v3', description: 'Dijital portfolyo sistemine hoş geldiniz. Şimdi size bu sitenin nasıl çalıştığını göstereceğim.' } },
-                            { element: '#tour-admin', popover: { title: 'Yönetici Paneli (Veri Merkezi)', description: 'Ahmet Bey profilini, yeteneklerini ve portfolyosunu bu güvenli alandan anlık olarak yönetir.', side: "bottom", align: 'start' }},
-                            { element: '#tour-cv', popover: { title: 'Otomatik CV (n8n)', description: 'Ahmet Bey verileri güncellediğinde, n8n otomasyonu devreye girer ve Google API aracılığıyla anlık PDF CV üretir.', side: "bottom", align: 'start' }},
-                            { element: '#tour-portfolio', popover: { title: 'Dinamik Portfolyo Sahnesi', description: 'Statik sayfalar devri bitti. Benimle sohbet ettiğinizde projeler ve grafikler tam burada görselleştirilir.', side: "left", align: 'start' }},
-                            { element: '#tour-chat', popover: { title: 'Yapay Zeka Beyni (Ben)', description: 'Ben Google Gemini Flash mimarisiyle çalışıyorum. Sorularınızı analiz eder ve sağdaki sahneyi ben yönetirim. Hadi başlayalım!', side: "right", align: 'start' }}
-                        ]
-                    });
-                    driverObj.drive();
-                } 
-                else if(gorsel === 'trikopatron') {
-                    stage.innerHTML = `
-                        <div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <span class="badge bg-success mb-2 px-3 py-2 shadow-sm">${isEn ? 'Completed Project' : 'Tamamlanan Proje'}</span>
-                                    <h2 style="font-weight: 800; color: #1e293b;"><i class="fas fa-box-open text-success"></i> TrikoPatron ERP</h2>
-                                    <p class="mt-3 text-muted" style="font-size: 1.05rem; line-height: 1.6;">${isEn ? 'End-to-end management panel for textile businesses.' : 'Tekstil işletmeleri için baştan uca yönetim paneli.'}</p>
-                                    <div class="mt-4 p-3 border rounded shadow-sm" style="background: rgba(255,255,255,0.9);">
-                                        <p class="mb-2"><strong><i class="fas fa-microchip text-primary me-2"></i>${isEn ? 'Technologies' : 'Teknoloji'}:</strong> Python, Flask, SQL</p>
-                                        <p class="mb-0 text-muted" style="font-size: 0.9rem;"><i class="fas fa-check-circle text-success me-2"></i>${isEn ? 'Order and stock integration.' : 'Sipariş ve stok entegrasyonu.'}</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mt-4 mt-md-0">
-                                    <div id="trikoCarousel" class="carousel slide carousel-fade shadow-lg rounded" data-bs-ride="carousel" style="border: 1px solid rgba(255,255,255,0.8); overflow: hidden;">
-                                      <div class="carousel-inner">
-                                        <div class="carousel-item active">
-                                          <img src="/static/images/triko1.png" class="d-block w-100" alt="Screen 1">
-                                          <div class="carousel-caption d-none d-md-block" style="background: rgba(15, 23, 42, 0.75); border-radius: 8px; padding: 5px; bottom: 10px;">
-                                            <h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">${isEn ? 'Secure Login' : 'Güvenli Yönetici Girişi'}</h6>
-                                          </div>
-                                        </div>
-                                        <div class="carousel-item">
-                                          <img src="/static/images/triko2.png" class="d-block w-100" alt="Screen 2">
-                                          <div class="carousel-caption d-none d-md-block" style="background: rgba(15, 23, 42, 0.75); border-radius: 8px; padding: 5px; bottom: 10px;">
-                                            <h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">${isEn ? 'Dashboard Panel' : 'Sipariş Takip Paneli'}</h6>
-                                          </div>
-                                        </div>
-                                        <div class="carousel-item">
-                                          <img src="/static/images/triko3.png" class="d-block w-100" alt="Screen 3">
-                                          <div class="carousel-caption d-none d-md-block" style="background: rgba(15, 23, 42, 0.75); border-radius: 8px; padding: 5px; bottom: 10px;">
-                                            <h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">${isEn ? 'PDF Reports' : 'PDF Raporlama & Fiş'}</h6>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <button class="carousel-control-prev" type="button" data-bs-target="#trikoCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
-                                      <button class="carousel-control-next" type="button" data-bs-target="#trikoCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
-                }
-                else if(gorsel === 'yetenekler') {
-                    stage.innerHTML = `
-                        <div class="idle-content text-start">
-                            <span class="badge bg-danger mb-2 px-3 py-2">${isEn ? 'Technical Infrastructure' : 'Teknik Altyapı'}</span>
-                            <h2 style="font-weight: 800; color: #1e293b;"><i class="fas fa-code text-danger"></i> ${isEn ? 'Technologies Used' : 'Kullanılan Teknolojiler'}</h2>
-                            <p class="mt-3 text-muted">${isEn ? 'Core tools used in system architecture and AI automations.' : 'Sistem mimarisinde ve yapay zeka otomasyonlarında kullanılan temel araçlar.'}</p>
-                            <div class="row mt-4">
-                                <div class="col-6 mb-3"><div class="p-3 border rounded text-center bg-white shadow-sm"><i class="fab fa-python fa-2x text-primary mb-2"></i><br><strong>Python</strong></div></div>
-                                <div class="col-6 mb-3"><div class="p-3 border rounded text-center bg-white shadow-sm"><i class="fas fa-server fa-2x text-dark mb-2"></i><br><strong>Flask</strong></div></div>
-                                <div class="col-6"><div class="p-3 border rounded text-center bg-white shadow-sm"><i class="fas fa-database fa-2x text-info mb-2"></i><br><strong>SQL</strong></div></div>
-                                <div class="col-6"><div class="p-3 border rounded text-center bg-white shadow-sm"><i class="fas fa-robot fa-2x text-warning mb-2"></i><br><strong>Gemini AI</strong></div></div>
-                            </div>
-                        </div>`;
-                }
-                else if(gorsel === 'iletisim') {
-                    stage.innerHTML = `
-                        <div class="idle-content text-center">
-                            <i class="fas fa-paper-plane fa-3x text-primary mb-3"></i>
-                            <h2 style="font-weight: 800; color: #1e293b;">${isEn ? 'Contact Channels' : 'İletişim Kanalları'}</h2>
-                            <p class="mt-3 text-muted">${isEn ? 'You can contact me directly for your project.' : 'Projeniz için benimle doğrudan iletişime geçebilirsiniz.'}</p>
-                            <div class="mt-4 d-flex flex-wrap justify-content-center gap-3">
-                                <a href="https://www.linkedin.com/in/ahmetbabli7/" target="_blank" class="btn btn-primary fw-bold px-4 py-3"><i class="fab fa-linkedin me-2"></i>LinkedIn</a>
-                                <a href="https://instagram.com/ahmetbabli7" target="_blank" class="btn btn-outline-danger fw-bold px-4 py-3"><i class="fab fa-instagram me-2"></i>Instagram</a>
-                                <a href="mailto:ahmetbablic7@gmail.com" class="btn btn-dark fw-bold px-4 py-3"><i class="fas fa-envelope me-2"></i>E-Mail</a>
-                            </div>
-                        </div>`;
-                }
             } catch (err) {
-                if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
+                var loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
                 appendErrorMessage(isEn ? "Connection failed." : "Bağlantı hatası.");
             }
         }
+
         function handleEnter(e) { if (e.key === "Enter") sendMessage(); }
     </script>
 </body>

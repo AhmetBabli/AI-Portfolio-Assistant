@@ -1,9 +1,7 @@
-Flask
-requests
-google-generativeai
-Flask-Limiter
-python-dotenv
-Flask-SQLAlchemy
-Flask-Login
-Flask-WTF
-Werkzeug
+Flask>=3.0,<4.0
+google-generativeai>=0.8
+Flask-Limiter>=3.5,<4.0
+python-dotenv>=1.0,<2.0
+Flask-SQLAlchemy>=3.1,<4.0
+Flask-Login>=0.6,<1.0
+Werkzeug>=3.0,<4.0

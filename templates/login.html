@@ -10,119 +10,181 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- SIRDAŞ V3 BEYAZ & GLASSMORPHISM TEMA --- */
+        /* --- SIRDAŞ V3 ULTRA-GLASSMORPHISM BEYAZ TEMA --- */
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+        }
+
         body {
-            background-color: #f5f7fa; /* Ferah ve temiz arka plan */
-            background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.05), transparent 400px); /* Sağ üstte çok hafif kurumsal mavi parlama */
-            color: #1e293b; 
+            background-color: var(--bg-body);
+            color: var(--text-main);
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Inter', sans-serif;
             margin: 0;
+            overflow: hidden;
+            position: relative;
         }
 
-        /* BUZLU CAM GİRİŞ KARTI */
+        /* CAM EFEKTİNİ PATLATAN ARKA PLAN BLR KÜRELERİ (BLOBS) */
+        .bg-blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+            filter: blur(40px);
+            z-index: -1;
+        }
+        .blob-1 { top: -10%; right: -10%; }
+        .blob-2 { bottom: -10%; left: -10%; }
+
+        /* PREMIUM BUZLU CAM KART */
         .login-card {
-            background-color: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
-            padding: 3rem 2.5rem;
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04), 
+                        0 1px 3px rgba(15, 23, 42, 0.02);
+            padding: 3.5rem 2.5rem;
             width: 100%;
-            max-width: 420px;
+            max-width: 430px;
+            transition: transform 0.3s ease;
         }
 
         .login-title {
-            color: #1e293b;
+            color: var(--text-main);
             font-weight: 800;
-            letter-spacing: -0.5px;
-            font-size: 1.8rem;
+            letter-spacing: -0.75px;
+            font-size: 1.85rem;
+        }
+
+        .login-title i {
+            color: var(--primary);
         }
 
         .form-label {
             color: #475569;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
         }
 
-        /* İNPUT ALANLARI */
+        /* İNPUT ALANLARI VE ŞİFRE GRUBU */
         .form-control {
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.9);
             border: 1px solid #cbd5e1;
-            color: #1e293b;
+            color: var(--text-main);
             border-radius: 12px;
             padding: 12px 16px;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .form-control:focus {
             background-color: #ffffff;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-            color: #1e293b;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
         }
 
-        .form-control::placeholder {
-            color: #94a3b8;
+        /* Şifre gizle/göster grubu için özel sarmalayıcı */
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0;
+            font-size: 1rem;
+            z-index: 10;
+        }
+        
+        .password-toggle:hover {
+            color: var(--text-main);
         }
 
-        /* GİRİŞ BUTONU */
+        /* INTERACTIVE BUTTON */
         .btn-primary {
-            background-color: #2563eb;
+            background-color: var(--primary);
             border: none;
             font-weight: 600;
             padding: 14px;
             border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            font-size: 0.98rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
         }
 
         .btn-primary:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
         }
 
-        /* GERİ DÖNÜŞ LİNKİ */
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
         .back-link {
-            color: #64748b;
+            color: var(--text-muted);
             text-decoration: none;
             font-weight: 500;
             font-size: 0.9rem;
             transition: color 0.2s ease;
             display: inline-flex;
             align-items: center;
+            gap: 6px;
         }
 
         .back-link:hover {
-            color: #2563eb;
+            color: var(--primary);
         }
 
-        /* HATA MESAJI (Jinja ile gelen) */
         .alert-danger {
             background-color: #fef2f2;
             border: 1px solid #fecaca;
             color: #ef4444;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
+            animation: shake 0.4s linear;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
         }
     </style>
 </head>
 <body>
+
+    <!-- Arka Plan Derinlik Küreleri -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
     <div class="login-card">
-        <div class="text-center mb-5">
+        <div class="text-center mb-4">
             <h2 class="login-title">
-                <i class="fas fa-fingerprint me-2 text-primary" style="color: #2563eb !important;"></i>Sistem Yetkilendirme
+                <i class="fas fa-fingerprint me-2"></i>Sistem Yetkilendirme
             </h2>
-            <p class="text-muted mt-2" style="font-size: 0.95rem;">Yönetici paneline erişim sağlayın</p>
+            <p class="text-muted mt-2" style="font-size: 0.92rem;">Yönetici paneline güvenli erişim sağlayın</p>
         </div>
         
         {% if error %}
@@ -131,25 +193,64 @@
         </div>
         {% endif %}
 
-        <form method="POST">
+        <form method="POST" id="loginForm">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            
             <div class="mb-4">
-                <label class="form-label"><i class="fas fa-user-astronaut me-2"></i>Kullanıcı Kimliği</label>
-                <input type="text" name="username" class="form-control" placeholder="Admin kullanıcı adınız" required autocomplete="off">
+                <label for="username" class="form-label">
+                    <i class="fas fa-user-astronaut me-2 text-muted"></i>Kullanıcı Kimliği
+                </label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Admin kullanıcı adı" required autocomplete="off">
             </div>
-            <div class="mb-5">
-                <label class="form-label"><i class="fas fa-key me-2"></i>Erişim Şifresi</label>
-                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+            
+            <div class="mb-4">
+                <label for="password" class="form-label">
+                    <i class="fas fa-key me-2 text-muted"></i>Erişim Şifresi
+                </label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                    <button type="button" class="password-toggle" id="togglePasswordBtn" onclick="togglePassword()">
+                        <i class="fas fa-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100 mb-4">
-                Sisteme Giriş Yap <i class="fas fa-arrow-right ms-2"></i>
+            
+            <button type="submit" class="btn btn-primary w-100 mb-4" id="submitBtn">
+                <span id="btnText">Sisteme Giriş Yap <i class="fas fa-arrow-right ms-2"></i></span>
             </button>
         </form>
+        
         <div class="text-center">
             <a href="/" class="back-link">
-                <i class="fas fa-arrow-left me-2"></i> Ana Ekrana Dön
+                <i class="fas fa-arrow-left"></i> Ana Ekrana Dön
             </a>
         </div>
     </div>
+
+    <!-- UX Etkileşim Scripti -->
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Form gönderildiğinde çift tıklamayı önleyen loading animasyonu tetikleyici
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            btn.disabled = true;
+            btnText.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Doğrulanıyor...';
+        });
+    </script>
 </body>
 </html>
