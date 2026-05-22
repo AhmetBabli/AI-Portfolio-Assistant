@@ -137,7 +137,6 @@ def create_app():
 # Global alandaki app = create_app() kaldırıldı. 
 # Artık projenin ana giriş noktası tamamen modüler.
 
-if __name__ == '__main__':
-    # Lokal testler için fabrikayı burada çalıştırıyoruz
+if __name__ == "__main__":
     app = create_app()
-    app.run(debug=os.getenv("FLASK_DEBUG", "0") == "1")
+    app.run(host="0.0.0.0", port=8080)
