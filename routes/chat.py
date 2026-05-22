@@ -116,6 +116,14 @@ def chat():
     user_msg = str(payload.get('message', '')).strip()
     language = str(payload.get('language', 'tr')).strip().lower()
 
+    if language not in ('tr', 'en'):
+        # Infer language from the user's text when no explicit preference is provided.
+        # English queries without Turkish-specific characters should be answered in English.
+        if re.search(r'[a-zA-Z]', user_msg) and not re.search(r'[ıüğşöçİĞÜŞÖÇ]', user_msg):
+            language = 'en'
+        else:
+            language = 'tr'
+
     if len(user_msg) > 1000:
         return jsonify({'response': 'Mesaj çok uzun. Lütfen kısaltın.', 'gorsel': 'error'}), 400
     if not user_msg:

@@ -10,7 +10,7 @@ def get_bot_prompt(cv_data: dict, proje_metni: str, language: str,
 
     # --- Dil ve Ton Talimatı (Pazarlamacı kelimesi çıkarıldı, asistan tonu netleştirildi) ---
     if language == 'en':
-        lang_instruction = "CRITICAL RULE: Answer in fluent, professional, and clear ENGLISH."
+        lang_instruction = "CRITICAL RULE: Answer in fluent, professional, and clear ENGLISH. If the user asks in English, always reply in English."
         role_instruction = (
             "Your name is Sırdaş. You are the digital AI assistant of Ahmet Babli Çulcu. "
             "ABSOLUTELY DO NOT speak as if you are Ahmet. Always refer to Ahmet in the third person "
@@ -24,6 +24,27 @@ def get_bot_prompt(cv_data: dict, proje_metni: str, language: str,
             "KESİNLİKLE Ahmet'in kendisiymiş gibi konuşma. Ahmet'ten her zaman üçüncü tekil şahıs "
             "(Ahmet, o, Ahmet Bey) olarak bahset. ('Ben yaparım' yerine 'Ahmet yapar' de). "
             "Cevapların kısa, net, yüzeysel ve profesyonel olsun. Destan yazma, kullanıcıya hızlıca istediği bilgiyi ver."
+        )
+
+    if language == 'en':
+        intent_blok = f"USER INTENT: {intent}\n" if intent else "USER INTENT: general\n"
+        sentiment_blok = f"TONE: {sentiment}\n" if sentiment else "TONE: neutral\n"
+        output_format = (
+            "OUTPUT FORMAT — STRICT JSON (Return only this structure, no extra text):\n"
+            "{\n"
+            "    \"cevap\": \"Write your short, assistant-style answer here.\",\n"
+            "    \"gorsel\": \"trikopatron | kariyer_ajans | yetenekler | iletisim | sirdas_tour | idle\"\n"
+            "}"
+        )
+    else:
+        intent_blok = f"KULLANICI NİYETİ: {intent}\n" if intent else "KULLANICI NİYETİ: general\n"
+        sentiment_blok = f"DİL TONU: {sentiment}\n" if sentiment else "DİL TONU: neutral\n"
+        output_format = (
+            "ÇIKTI FORMATI — KESİN JSON (Sadece aşağıdaki yapıyı döndür, fazladan yazı yazma):\n"
+            "{\n"
+            "    \"cevap\": \"Buraya kısa ve asistan tonunda cevabını yazacaksın.\",\n"
+            "    \"gorsel\": \"trikopatron | kariyer_ajans | yetenekler | iletisim | sirdas_tour | idle\"\n"
+            "}"
         )
 
     # --- Dinamik ek bilgiler (Admin panelinden) ---
@@ -42,9 +63,6 @@ def get_bot_prompt(cv_data: dict, proje_metni: str, language: str,
 
     ek_bilgi_blok = "\n\n".join(ek_bilgi_parts) if ek_bilgi_parts else "— Admin tarafından eklenmiş ek not yok. —"
     proje_blok = proje_metni.strip() if proje_metni.strip() else "— Henüz proje eklenmemiş. —"
-    
-    intent_blok = f"KULLANICI NİYETİ: {intent}\n" if intent else "KULLANICI NİYETİ: general\n"
-    sentiment_blok = f"DİL TONU: {sentiment}\n" if sentiment else "DİL TONU: neutral\n"
 
     full_prompt = f"""
 {lang_instruction}
@@ -72,11 +90,7 @@ Eğer ziyaretçi "Kendini anlat", "Sırdaş nedir", "Nasıl çalışıyorsun", "
 --- KONUŞMA BİLGİSİ ---
 {intent_blok}{sentiment_blok}
 
-ÇIKTI FORMATI — KESİN JSON (Sadece aşağıdaki yapıyı döndür, fazladan yazı yazma):
-{{
-    "cevap": "Buraya kısa ve asistan tonunda cevabını yazacaksın.",
-    "gorsel": "trikopatron | kariyer_ajans | yetenekler | iletisim | sirdas_tour | idle"
-}}
+{output_format}
 
 --- KONUŞMA GEÇMİŞİ ---
 {history_text}
