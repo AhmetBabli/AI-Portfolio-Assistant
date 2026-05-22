@@ -224,9 +224,10 @@ def chat():
         
         # --- API Key hatası ---
         if 'API key' in error_str or 'authentication' in error_str.lower() or 'unauthorized' in error_str.lower():
-            err = ("API anahtarı sorunu. Admin kontrol etsin." if language == 'tr' 
-                   else "API key issue. Please contact admin.")
-            current_app.logger.critical("⚠️ API KEY HATASI: %s", error_str)
+            used_key = current_app.config.get('GOOGLE_API_KEY', '')
+            key_preview = used_key[:10] + '...' if used_key else 'YOK'
+            err = f"API Hatası: Sistem '{key_preview}' ile başlayan anahtarı kullanıyor ve Google bunu reddediyor. Eğer bu ESKİ anahtarınızsa, sunucu yeni .env dosyasını hala okumuyor demektir!"
+            current_app.logger.critical("⚠️ API KEY HATASI: %s (Kullanılan: %s)", error_str, key_preview)
             return jsonify({'response': err, 'gorsel': 'error'})
 
         err = "Sistem hatası. Lütfen tekrar deneyin." if language == 'tr' else "System error. Please try again."
