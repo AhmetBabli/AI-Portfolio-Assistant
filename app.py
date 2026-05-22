@@ -51,6 +51,7 @@ def create_app():
     # ── Gemini API — tek seferlik yapılandırma ────────────────────────────────
     api_key = app.config.get('GOOGLE_API_KEY')
     if api_key:
+        app.logger.info(f"Guncel API Key son 4 hanesi: {api_key[-4:]}")
         import google.generativeai as genai
         genai.configure(api_key=api_key)
         app.logger.info(f"Gemini API başarıyla yapılandırıldı. Model: {app.config.get('GEMINI_MODEL')}")
