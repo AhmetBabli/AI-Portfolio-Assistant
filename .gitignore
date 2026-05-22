@@ -16,9 +16,6 @@ sirlar.py
 *.sqlite3
 instance/
 static/uploads/
-static/projects.json
-static/cv_data.json
-static/Ahmet_Babli_CV.pdf
 
 # VS Code ayarları
 .vscode/
