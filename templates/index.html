@@ -140,8 +140,8 @@
                 flex-direction: column;
                 padding: 0;
                 gap: 0;
-                height: 100vh;
-                height: 100dvh;
+                height: calc(100vh - 56px - env(safe-area-inset-bottom, 0px));
+                height: calc(100dvh - 56px - env(safe-area-inset-bottom, 0px));
                 max-width: 100%;
                 pointer-events: auto;
             }
@@ -370,8 +370,7 @@
 
             /* Chat alt kısmında tab bar alanı bırak */
             .chat-side {
-                height: calc(100vh - 56px);
-                height: calc(100dvh - 56px);
+                height: 100%;
             }
         }
     </style>
@@ -957,8 +956,10 @@
                     var badge = document.getElementById('portfolioBadge');
                     if (badge) badge.style.display = 'block';
                 }
-                // Otomatik olarak portfolyo sekmesine geç
-                switchMobileTab('portfolio');
+                // Otomatik olarak portfolyo sekmesine geç (kullanıcının mesajı okuması için ufak bir gecikme ile)
+                setTimeout(function() {
+                    switchMobileTab('portfolio');
+                }, 1000);
             }
         };
 
