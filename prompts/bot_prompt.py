@@ -1,3 +1,5 @@
+from prompts.ahmet_profile import AHMET_PROFIL
+
 def get_bot_prompt(cv_data: dict, proje_metni: str, language: str,
                    user_msg: str, intent: str = 'general', sentiment: str = 'neutral',
                    history_text: str = "") -> str:

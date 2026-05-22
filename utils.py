@@ -68,25 +68,34 @@ def get_settings(use_cache: bool = True) -> dict:
 
 
 def get_projects(use_cache: bool = True) -> list:
-    """Projeleri veritabanından çeker. Sadece veri döner (Separation of Concerns)."""
+    """Projeleri veritabanından çeker. Dict listesi döner (session bağımsız)."""
     if use_cache:
         cached = _cache_manager.get('projects')
         if cached is not None:
             return cached
 
-    projeler = Project.query.all()
-    
+    # ORM nesnelerini hemen dict'e çeviriyoruz — session kapandıktan sonra
+    # DetachedInstanceError alınmasını bu şekilde engelliyoruz.
+    projeler = [
+        {
+            'baslik':      p.baslik,
+            'teknolojiler': p.teknolojiler,
+            'aciklama':    p.aciklama,
+        }
+        for p in Project.query.all()
+    ]
+
     if use_cache:
         # Projeler için 10 dakika (600 saniye) TTL
         _cache_manager.set('projects', projeler, ttl=600)
-        
+
     return projeler
 
 
 def format_projects_for_prompt(projeler: list) -> str:
-    """Çekilen proje nesnelerini LLM promptuna uygun metne çevirir."""
+    """Dict listesini LLM promptuna uygun metne çevirir."""
     return "\n".join([
-        f"- {p.baslik} ({p.teknolojiler}): {p.aciklama}"
+        f"- {p['baslik']} ({p['teknolojiler']}): {p['aciklama']}"
         for p in projeler
     ])
 

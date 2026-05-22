@@ -114,80 +114,264 @@
         /* Idle logo */
         .idle-logo-svg { width: 64px; height: 64px; margin-bottom: 20px; filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.3)); }
 
-        /* Mobil uyumluluk */
+        /* ── Mobil Tab Bar ─────────────────────────────────────────────── */
+        .mobile-tab-bar {
+            display: none;
+        }
+        .mobile-links-section {
+            display: none;
+        }
+
+        /* ── Mobil Uyumluluk (Tam Yeniden Tasarım) ─────────────────────── */
         @media (max-width: 768px) {
             body, html {
-                height: auto;
-                overflow: auto;
+                height: 100vh;
+                height: 100dvh;
+                overflow: hidden;
             }
+
+            /* Spline 3D arka planı mobilde kapat (performans) */
+            #spline-container {
+                display: none !important;
+            }
+
             .master-container {
                 display: flex;
                 flex-direction: column;
-                padding: 10px;
-                gap: 10px;
-                height: auto !important;
-                min-height: auto;
+                padding: 0;
+                gap: 0;
+                height: 100vh;
+                height: 100dvh;
                 max-width: 100%;
+                pointer-events: auto;
             }
+
+            /* ── Chat Sekmesi ── */
             .chat-side {
-                height: 55vh;
-                border-radius: 16px;
-            }
-            .stage-side {
+                flex: 1;
                 height: auto;
-                min-height: 45vh;
+                border-radius: 0;
+                border: none;
+                background: var(--glass-bg);
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
             }
-            .dynamic-stage {
-                height: auto;
-                min-height: 40vh;
+            .chat-side.mobile-hidden {
+                display: none !important;
             }
-            .idle-content {
-                padding: 20px;
+
+            .chat-header {
+                padding: 12px 16px;
+                gap: 10px;
+                position: relative;
             }
             .chat-header h5 {
                 font-size: 1rem;
             }
+
+            #messages {
+                flex: 1;
+                padding: 12px 14px;
+                gap: 10px;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
             .msg {
                 font-size: 0.9rem;
                 padding: 10px 14px;
+                max-width: 88%;
+                border-radius: 14px;
             }
-            .idle-content h1 {
-                font-size: 2rem;
-            }
-            .idle-content p {
-                font-size: 0.9rem;
-            }
-            .stage-header {
-                padding: 10px 20px;
-                gap: 10px;
-                flex-wrap: wrap;
-            }
-            .stage-btn {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
+
             .quick-prompts {
-                padding: 8px 10px 0 10px;
+                padding: 8px 12px;
+                gap: 6px;
+                border-top: 1px solid var(--glass-border);
             }
             .prompt-chip {
-                padding: 6px 10px;
-                font-size: 0.75rem;
+                padding: 8px 14px;
+                font-size: 0.78rem;
+                min-height: 36px;
+                display: flex;
+                align-items: center;
+                border-radius: 18px;
             }
+
             .chat-input-area {
-                padding: 10px 10px;
+                padding: 10px 12px;
+                padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
             }
             .input-wrapper {
-                padding: 4px 4px 4px 10px;
+                padding: 4px 4px 4px 14px;
+                border-radius: 14px;
             }
             input {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
+                min-height: 40px;
             }
             .send-btn {
-                width: 36px;
-                height: 36px;
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                flex-shrink: 0;
             }
             .bottom-controls {
                 font-size: 0.75rem;
+                margin-top: 6px;
+            }
+
+            /* ── Portfolyo Sekmesi (varsayılan gizli) ── */
+            .stage-side {
+                display: none;
+                flex-direction: column;
+                height: calc(100vh - 56px);
+                height: calc(100dvh - 56px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                pointer-events: auto;
+            }
+            .stage-side.mobile-active {
+                display: flex !important;
+            }
+            .stage-header {
+                display: none;
+            }
+            .dynamic-stage {
+                flex: 1;
+                padding: 20px 16px;
+                align-items: flex-start;
+            }
+            .idle-content {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+            .idle-content h1 {
+                font-size: 1.6rem;
+                letter-spacing: -0.5px;
+            }
+            .idle-content h2 {
+                font-size: 1.3rem;
+            }
+            .idle-content p {
+                font-size: 0.88rem;
+            }
+
+            /* ── Bağlantılar Sekmesi ── */
+            .mobile-links-section {
+                display: none;
+                flex-direction: column;
+                height: calc(100vh - 56px);
+                height: calc(100dvh - 56px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 24px 20px;
+                background: var(--glass-bg);
+                pointer-events: auto;
+            }
+            .mobile-links-section.mobile-active {
+                display: flex !important;
+            }
+            .mobile-links-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                margin-top: 20px;
+            }
+            .mobile-link-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                padding: 24px 16px;
+                background: var(--stage-card-bg);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                color: var(--text-main);
+                text-decoration: none;
+                transition: all 0.2s ease;
+                min-height: 100px;
+            }
+            .mobile-link-card:hover, .mobile-link-card:active {
+                border-color: var(--accent);
+                transform: scale(0.97);
+                color: var(--accent);
+            }
+            .mobile-link-card i {
+                font-size: 1.8rem;
+            }
+            .mobile-link-card span {
+                font-size: 0.85rem;
+                font-weight: 600;
+            }
+            .mobile-link-card.full-width {
+                grid-column: 1 / -1;
+            }
+
+            /* ── Alt Tab Bar ── */
+            .mobile-tab-bar {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 56px;
+                background: rgba(9, 13, 22, 0.95);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-top: 1px solid var(--glass-border);
+                z-index: 999;
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+            }
+            .mobile-tab {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 3px;
+                background: none;
+                border: none;
+                color: var(--text-sub);
+                font-size: 0.65rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: color 0.2s;
+                position: relative;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .mobile-tab i {
+                font-size: 1.15rem;
+                transition: all 0.2s;
+            }
+            .mobile-tab.active {
+                color: var(--accent);
+            }
+            .mobile-tab.active i {
+                transform: scale(1.1);
+            }
+            .mobile-tab .tab-badge {
+                position: absolute;
+                top: 4px;
+                right: calc(50% - 16px);
+                width: 8px;
+                height: 8px;
+                background: #ef4444;
+                border-radius: 50%;
+                display: none;
+                animation: badgePulse 1.5s ease-in-out infinite;
+            }
+            @keyframes badgePulse {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0.6; transform: scale(0.8); }
+            }
+
+            /* Chat alt kısmında tab bar alanı bırak */
+            .chat-side {
+                height: calc(100vh - 56px);
+                height: calc(100dvh - 56px);
             }
         }
     </style>
@@ -226,7 +410,6 @@
             <div class="quick-prompts" id="quickPrompts">
                 <div class="prompt-chip chip-highlight" onclick="hizliSor(this, 'Ahmet Babli Çulcu hakkında her şeyi anlat. Eğitimi, projeleri, yetenekleri ve kariyer hedefleri neler?')"><i class="fas fa-user-tie me-1"></i> <span class="chip-label">Ahmet'i Tanı</span></div>
                 <div class="prompt-chip" onclick="hizliSor(this, 'TrikoPatron ERP projesi nedir? Detaylı anlat.')"><i class="fas fa-box-open me-1"></i> <span class="chip-label">TrikoPatron</span></div>
-                <div class="prompt-chip" onclick="hizliSor(this, 'Kariyer Ajansı projesi nedir? Nasıl çalışıyor?')"><i class="fas fa-rocket me-1"></i> <span class="chip-label">Kariyer Ajansı</span></div>
                 <div class="prompt-chip" onclick="hizliSor(this, 'Hangi yazılım dillerini ve teknolojileri kullanıyor?')"><i class="fas fa-code me-1"></i> <span class="chip-label">Yetenekler</span></div>
                 <div class="prompt-chip" onclick="hizliSor(this, 'İletişim bilgileri nelerdir?')"><i class="fas fa-envelope me-1"></i> <span class="chip-label">İletişim</span></div>
                 <div class="prompt-chip" onclick="hizliSor(this, 'Sistemi bana tanıt. Sırdaş nedir?')"><i class="fas fa-wand-magic-sparkles me-1"></i> <span class="chip-label">Site Turu</span></div>
@@ -276,7 +459,70 @@
                 </div>
             </div>
         </section>
+
+        <!-- ── Mobil Bağlantılar Sekmesi ────────────────────────────────── -->
+        <section class="mobile-links-section" id="mobileLinksSection">
+            <div style="text-align: center; margin-bottom: 8px;">
+                <svg class="idle-logo-svg sirdas-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="48" height="48">
+                    <defs><linearGradient id="mob-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+                    <rect x="3" y="2" width="34" height="26" rx="8" fill="url(#mob-grad)"/>
+                    <polygon points="9,28 9,37 18,28" fill="url(#mob-grad)"/>
+                    <circle cx="20" cy="11" r="3.2" fill="white" opacity="0.95"/>
+                    <circle cx="12.5" cy="22" r="2.2" fill="white" opacity="0.7"/>
+                    <circle cx="27.5" cy="22" r="2.2" fill="white" opacity="0.7"/>
+                </svg>
+                <h2 style="font-weight: 800; font-size: 1.4rem; color: var(--text-main); margin-top: 12px;">AHMET BABLİ ÇULCU</h2>
+                <p style="color: var(--text-sub); font-size: 0.85rem; margin: 4px 0 0 0;" class="lang-text" data-tr="Yönetim Bilişim Sistemleri & Python/Flask Geliştiricisi" data-en="Management Information Systems & Python/Flask Developer">Yönetim Bilişim Sistemleri & Python/Flask Geliştiricisi</p>
+            </div>
+            <div class="mobile-links-grid">
+                <a href="/yonetici" class="mobile-link-card">
+                    <i class="fas fa-user-shield" style="color: #3b82f6;"></i>
+                    <span class="lang-text" data-tr="Yönetici Paneli" data-en="Admin Panel">Yönetici Paneli</span>
+                </a>
+                <a href="/static/Ahmet_Babli_CV.pdf" download class="mobile-link-card">
+                    <i class="fas fa-file-download" style="color: #10b981;"></i>
+                    <span class="lang-text" data-tr="CV İndir" data-en="Download CV">CV İndir</span>
+                </a>
+                <a href="https://github.com/AhmetBabli" target="_blank" class="mobile-link-card">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+                <a href="https://www.linkedin.com/in/ahmetbabli7/" target="_blank" class="mobile-link-card">
+                    <i class="fab fa-linkedin" style="color: #0a66c2;"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://instagram.com/ahmetbabli7" target="_blank" class="mobile-link-card">
+                    <i class="fab fa-instagram" style="color: #e1306c;"></i>
+                    <span>Instagram</span>
+                </a>
+                <a href="mailto:ahmetbablic7@gmail.com" class="mobile-link-card">
+                    <i class="fas fa-envelope" style="color: #6366f1;"></i>
+                    <span>E-Posta</span>
+                </a>
+                <button onclick="togglePageTheme()" class="mobile-link-card full-width" style="border: none; cursor: pointer;">
+                    <i class="fas fa-adjust" style="color: #f59e0b;"></i>
+                    <span class="lang-text" data-tr="Tema Değiştir" data-en="Toggle Theme">Tema Değiştir</span>
+                </button>
+            </div>
+        </section>
     </div>
+
+    <!-- ── Mobil Alt Tab Navigasyonu ─────────────────────────────────── -->
+    <nav class="mobile-tab-bar" id="mobileTabBar">
+        <button class="mobile-tab active" data-tab="chat" onclick="switchMobileTab('chat')">
+            <i class="fas fa-comments"></i>
+            <span class="lang-text" data-tr="Sohbet" data-en="Chat">Sohbet</span>
+        </button>
+        <button class="mobile-tab" data-tab="portfolio" onclick="switchMobileTab('portfolio')">
+            <i class="fas fa-briefcase"></i>
+            <span class="tab-badge" id="portfolioBadge"></span>
+            <span class="lang-text" data-tr="Portfolyo" data-en="Portfolio">Portfolyo</span>
+        </button>
+        <button class="mobile-tab" data-tab="links" onclick="switchMobileTab('links')">
+            <i class="fas fa-link"></i>
+            <span class="lang-text" data-tr="Bağlantılar" data-en="Links">Bağlantılar</span>
+        </button>
+    </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -409,8 +655,8 @@
                 // Hızlı Çip çevirileri
                 var chips = document.getElementById('quickPrompts').querySelectorAll('.chip-label');
                 var chipTexts = isEn
-                    ? ['Meet Ahmet', 'TrikoPatron', 'Career Agency', 'Skills', 'Contact', 'Site Tour']
-                    : ["Ahmet'i Tanı", 'TrikoPatron', 'Kariyer Ajansı', 'Yetenekler', 'İletişim', 'Site Turu'];
+                    ? ['Meet Ahmet', 'TrikoPatron', 'Skills', 'Contact', 'Site Tour']
+                    : ["Ahmet'i Tanı", 'TrikoPatron', 'Yetenekler', 'İletişim', 'Site Turu'];
                 chips.forEach(function(el, i) { if(chipTexts[i]) el.textContent = chipTexts[i]; });
 
                 // AI Asistan ilk karşılama mesajını da anlık çevir
@@ -436,7 +682,6 @@
             if(isEn) {
                 if(soru.includes("Ahmet Babli")) finalQuestion = "Tell me everything about Ahmet Babli Çulcu — his education, projects, skills and career goals.";
                 if(soru.includes("TrikoPatron ERP")) finalQuestion = "What is the TrikoPatron ERP project? Give me the details.";
-                if(soru.includes("Kariyer Ajansı")) finalQuestion = "What is the Career Agency project? How does it work?";
                 if(soru.includes("Hangi yazılım")) finalQuestion = "What programming languages and technologies does he use?";
                 if(soru.includes("İletişim bilgileri")) finalQuestion = "What is his contact information?";
                 if(soru.includes("Sistemi bana tanıt")) finalQuestion = "Introduce the system to me. What is Sırdaş?";
@@ -660,6 +905,91 @@
         }
 
         function handleEnter(e) { if (e.key === "Enter") sendMessage(); }
+
+        // ── Mobil Tab Navigasyonu ─────────────────────────────────────────
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
+        function switchMobileTab(tabName) {
+            if (!isMobile()) return;
+
+            // Tüm tab butonlarını pasif yap
+            document.querySelectorAll('.mobile-tab').forEach(function(t) {
+                t.classList.remove('active');
+            });
+            // Aktif tab'ı işaretle
+            var activeBtn = document.querySelector('.mobile-tab[data-tab="' + tabName + '"]');
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Tüm section'ları gizle
+            var chatSide = document.querySelector('.chat-side');
+            var stageSide = document.querySelector('.stage-side');
+            var linksSection = document.getElementById('mobileLinksSection');
+
+            chatSide.classList.add('mobile-hidden');
+            stageSide.classList.remove('mobile-active');
+            linksSection.classList.remove('mobile-active');
+
+            // Seçilen section'ı göster
+            if (tabName === 'chat') {
+                chatSide.classList.remove('mobile-hidden');
+            } else if (tabName === 'portfolio') {
+                stageSide.classList.add('mobile-active');
+                // Badge'i gizle (kullanıcı portfolyo sekmesini açtığında)
+                var badge = document.getElementById('portfolioBadge');
+                if (badge) badge.style.display = 'none';
+            } else if (tabName === 'links') {
+                linksSection.classList.add('mobile-active');
+            }
+        }
+
+        // updateStage'e mobil tab geçişi ekle
+        var _originalUpdateStage = updateStage;
+        updateStage = function(gorsel, isEn) {
+            _originalUpdateStage(gorsel, isEn);
+
+            // Mobilde anlamlı bir görsel geldiğinde portfolyo badge'ini göster
+            if (isMobile() && gorsel && gorsel !== 'idle') {
+                var currentTab = document.querySelector('.mobile-tab.active');
+                if (currentTab && currentTab.getAttribute('data-tab') !== 'portfolio') {
+                    // Badge göster
+                    var badge = document.getElementById('portfolioBadge');
+                    if (badge) badge.style.display = 'block';
+                }
+                // Otomatik olarak portfolyo sekmesine geç
+                switchMobileTab('portfolio');
+            }
+        };
+
+        // Sayfa yüklendiğinde mobilde varsayılan tab ayarla
+        window.addEventListener('DOMContentLoaded', function() {
+            if (isMobile()) {
+                switchMobileTab('chat');
+            }
+        });
+
+        // Pencere boyutu değiştiğinde tab bar'ı yönet
+        window.addEventListener('resize', function() {
+            var chatSide = document.querySelector('.chat-side');
+            var stageSide = document.querySelector('.stage-side');
+            var linksSection = document.getElementById('mobileLinksSection');
+
+            if (!isMobile()) {
+                // Masaüstüne dönünce tüm mobil class'ları temizle
+                chatSide.classList.remove('mobile-hidden');
+                stageSide.classList.remove('mobile-active');
+                linksSection.classList.remove('mobile-active');
+            } else {
+                // Mobilde aktif tab yoksa chat'i aç
+                var activeTab = document.querySelector('.mobile-tab.active');
+                if (activeTab) {
+                    switchMobileTab(activeTab.getAttribute('data-tab'));
+                } else {
+                    switchMobileTab('chat');
+                }
+            }
+        });
     </script>
 </body>
 </html>
