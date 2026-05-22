@@ -12,8 +12,7 @@ venv/
 sirlar.py
 
 # Veritabanı ve Yüklemeler
-*.db
-*.sqlite3
+
 instance/
 static/uploads/
 

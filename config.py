@@ -33,7 +33,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL", 
-        f"sqlite:///{os.path.join(BASE_DIR, 'sirdas_dev.db')}"
+        f"sqlite:///{os.path.join(BASE_DIR, 'sirdas.db')}"
     )
     # Lokal çalışırken HTTPS zorunluluğunu kaldırıyoruz
     SESSION_COOKIE_SECURE = False
@@ -46,7 +46,8 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     """Canlı (Production) Ortam Ayarları"""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")  # Canlıda PostgreSQL/MySQL URL'i zorunlu olsun
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL") or f"sqlite:///{os.path.join(BASE_DIR, 'sirdas.db')}"
+
     SESSION_COOKIE_SECURE = True  # Canlıda mutlaka HTTPS kullanılmalı
 
     @classmethod
