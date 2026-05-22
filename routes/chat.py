@@ -224,8 +224,7 @@ def chat():
         
         # --- API Key hatası ---
         if 'API key' in error_str or 'authentication' in error_str.lower() or 'unauthorized' in error_str.lower():
-            err = ("API anahtarı sorunu. Admin kontrol etsin." if language == 'tr' 
-                   else "API key issue. Please contact admin.")
+            err = f"API Hatası Detayı: {error_str}"
             current_app.logger.critical("⚠️ API KEY HATASI: %s", error_str)
             return jsonify({'response': err, 'gorsel': 'error'})
 
