@@ -210,10 +210,10 @@ def chat():
         return jsonify({'response': bot_cevap, 'gorsel': gorsel_turu})
 
     except Exception as e:
-        current_app.logger.error("CHAT HATASI: %s", e, exc_info=True)
+        error_str = str(e)
+        current_app.logger.error("CHAT HATASI [%s]: %s", type(e).__name__, error_str, exc_info=True)
 
         # --- 429 Rate Limit / Quota Exceeded ---
-        error_str = str(e)
         if '429' in error_str or 'ResourceExhausted' in error_str or 'quota' in error_str.lower():
             rate_msg = (
                 "Çok fazla istek gönderildi, lütfen biraz bekleyip tekrar deneyin. ⏳"
@@ -221,6 +221,13 @@ def chat():
                 else "Too many requests. Please wait a moment and try again. ⏳"
             )
             return jsonify({'response': rate_msg, 'gorsel': 'idle'})
+        
+        # --- API Key hatası ---
+        if 'API key' in error_str or 'authentication' in error_str.lower() or 'unauthorized' in error_str.lower():
+            err = ("API anahtarı sorunu. Admin kontrol etsin." if language == 'tr' 
+                   else "API key issue. Please contact admin.")
+            current_app.logger.critical("⚠️ API KEY HATASI: %s", error_str)
+            return jsonify({'response': err, 'gorsel': 'error'})
 
         err = "Sistem hatası. Lütfen tekrar deneyin." if language == 'tr' else "System error. Please try again."
         return jsonify({'response': err, 'gorsel': 'error'})
