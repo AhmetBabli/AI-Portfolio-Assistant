@@ -528,6 +528,9 @@
     <script>
         // ── Spline 3D — Masaüstü için yükle ve hata durumunu kontrol et ─────────
         (function() {
+            // Mobilde 0px render (WebGL crash) sorununu önlemek için spline'ı hiç yükleme
+            if (window.innerWidth <= 768) return;
+
             var script = document.createElement('script');
             script.type = 'module';
             script.src = 'https://unpkg.com/@splinetool/viewer@1.12.74/build/spline-viewer.js';
