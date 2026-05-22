@@ -36,6 +36,13 @@ def create_app():
     login_manager.init_app(app)
     limiter.init_app(app)
 
+    # Veritabanı tablolarının otomatik oluşturulmasını sağla (Canlı ortamda tablo yoksa hata vermemesi için)
+    with app.app_context():
+        try:
+            db.create_all()
+        except Exception as e:
+            app.logger.warning("Veritabanı tabloları oluşturulurken hata: %s", e)
+
     # Not: extensions.py içinde bunları zaten tanımlamıştık, 
     # burada kalması veya oradan yönetilmesi tamamen senin yoğurt yiyişine kalmış akhi.
     login_manager.login_view    = 'auth.login'

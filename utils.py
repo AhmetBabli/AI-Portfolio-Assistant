@@ -58,7 +58,11 @@ def get_settings(use_cache: bool = True) -> dict:
         if cached is not None:
             return cached
 
-    result = {s.key: s.value for s in Setting.query.all()}
+    try:
+        result = {s.key: s.value for s in Setting.query.all()}
+    except Exception as e:
+        current_app.logger.warning("get_settings DB Hatası: %s", e)
+        result = {}
 
     if use_cache:
         # Settings için 5 dakika (300 saniye) TTL
@@ -76,14 +80,18 @@ def get_projects(use_cache: bool = True) -> list:
 
     # ORM nesnelerini hemen dict'e çeviriyoruz — session kapandıktan sonra
     # DetachedInstanceError alınmasını bu şekilde engelliyoruz.
-    projeler = [
-        {
-            'baslik':      p.baslik,
-            'teknolojiler': p.teknolojiler,
-            'aciklama':    p.aciklama,
-        }
-        for p in Project.query.all()
-    ]
+    try:
+        projeler = [
+            {
+                'baslik':      p.baslik,
+                'teknolojiler': p.teknolojiler,
+                'aciklama':    p.aciklama,
+            }
+            for p in Project.query.all()
+        ]
+    except Exception as e:
+        current_app.logger.warning("get_projects DB Hatası: %s", e)
+        projeler = []
 
     if use_cache:
         # Projeler için 10 dakika (600 saniye) TTL
