@@ -41,6 +41,21 @@ def _unique_filename(original: str) -> str:
     return f"{name}_{uuid.uuid4().hex[:8]}{ext}"
 
 
+def _save_uploaded_photos(app) -> str:
+    """'foto' alanındaki (çoklu seçilebilen) resimleri kaydeder, virgülle
+    ayrılmış relatif yol listesi döner. Hiç geçerli dosya yoksa boş string."""
+    files = [f for f in request.files.getlist('foto') if f.filename and allowed_file(f.filename)]
+    if not files:
+        return ''
+    ud = _ensure_upload_dir(app)
+    paths = []
+    for foto in files:
+        filename = _unique_filename(foto.filename)
+        foto.save(os.path.join(ud, filename))
+        paths.append(f"uploads/{filename}")
+    return ",".join(paths)
+
+
 # ── Admin ana sayfa ────────────────────────────────────────────────────────────
 
 @admin_bp.route('/yonetici')
@@ -106,21 +121,14 @@ def proje_ekle():
     aciklama = (request.form.get('aciklama') or '').strip()
     link = (request.form.get('link') or '').strip()
 
-    gorsel_path = ''
-    if 'foto' in request.files:
-        foto = request.files['foto']
-        if foto.filename and allowed_file(foto.filename):
-            filename = _unique_filename(foto.filename)
-            ud = _ensure_upload_dir(current_app)
-            foto.save(os.path.join(ud, filename))
-            gorsel_path = f"uploads/{filename}"
+    gorsel_path = _save_uploaded_photos(current_app)
 
     db.session.add(Project(
         baslik=baslik, teknolojiler=teknolojiler,
         aciklama=aciklama, link=link, gorsel=gorsel_path
     ))
     db.session.commit()
-    invalidate_cache('projects_text')
+    invalidate_cache('projects')
     return redirect(url_for('admin.admin_paneli'))
 
 
@@ -138,16 +146,12 @@ def proje_guncelle(id):
     proje.aciklama = (request.form.get('aciklama') or proje.aciklama).strip()
     proje.link = (request.form.get('link') or proje.link or '').strip()
 
-    if 'foto' in request.files:
-        foto = request.files['foto']
-        if foto.filename and allowed_file(foto.filename):
-            filename = _unique_filename(foto.filename)
-            ud = _ensure_upload_dir(current_app)
-            foto.save(os.path.join(ud, filename))
-            proje.gorsel = f"uploads/{filename}"
+    yeni_gorsel = _save_uploaded_photos(current_app)
+    if yeni_gorsel:
+        proje.gorsel = yeni_gorsel
 
     db.session.commit()
-    invalidate_cache('projects_text')
+    invalidate_cache('projects')
     return redirect(url_for('admin.admin_paneli'))
 
 
@@ -160,10 +164,13 @@ def proje_sil(id):
         return "Geçersiz CSRF token.", 400
 
     proje = Project.query.get_or_404(id)
-    
-    # Dosya silme işlemini güvenli ve robust yap
-    if proje.gorsel:
-        full_path = os.path.join(current_app.config['STATIC_FOLDER'], proje.gorsel)
+
+    # Dosya silme işlemini güvenli ve robust yap (birden fazla görsel olabilir)
+    for gorsel_path in (proje.gorsel or '').split(','):
+        gorsel_path = gorsel_path.strip()
+        if not gorsel_path:
+            continue
+        full_path = os.path.join(current_app.config['STATIC_FOLDER'], gorsel_path)
         try:
             if os.path.exists(full_path) and os.path.isfile(full_path):
                 # Path traversal kontrolü
@@ -172,18 +179,18 @@ def proje_sil(id):
                 ):
                     current_app.logger.error(f"Path traversal attempt detected: {full_path}")
                     return "Dosya silme başarısız.", 400
-                
+
                 os.remove(full_path)
                 current_app.logger.info(f"Deleted file: {full_path}")
         except OSError as e:
             current_app.logger.error(f"File deletion error: {e}")
             # Dosya silme başarısız olsa da DB'den sil
-    
+
     # Database'den sil
     try:
         db.session.delete(proje)
         db.session.commit()
-        invalidate_cache('projects_text')
+        invalidate_cache('projects')
         return redirect(url_for('admin.admin_paneli'))
     except Exception as e:
         current_app.logger.error(f"Project deletion error: {e}")

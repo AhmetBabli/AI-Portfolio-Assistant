@@ -925,9 +925,24 @@
                         .map(function(t) { return '<span class="badge me-1 mb-1" style="background: var(--chip-bg); color: var(--accent); border: 1px solid var(--chip-border);">' + t + '</span>'; })
                         .join('');
 
-                    var _visual = _proj.gorsel
-                        ? '<img src="/static/' + _proj.gorsel + '" class="w-100 rounded shadow-sm" style="max-height:260px; object-fit:cover;" alt="' + _proj.baslik + '">'
-                        : '<div class="p-4 border rounded text-center" style="background: var(--btn-bg); border-color: var(--btn-border) !important;"><i class="fas fa-diagram-project fa-4x" style="color:#7c3aed;"></i></div>';
+                    var _fotolar = (_proj.gorsel || '').split(',').map(function(g) { return g.trim(); }).filter(Boolean);
+                    var _visual;
+                    if (_fotolar.length > 1) {
+                        var _carouselId = 'projeCarousel' + _proj.id;
+                        var _slides = _fotolar.map(function(g, i) {
+                            return '<div class="carousel-item' + (i === 0 ? ' active' : '') + '"><img src="/static/' + g + '" class="d-block w-100" style="max-height:260px; object-fit:cover;" alt="' + _proj.baslik + '"></div>';
+                        }).join('');
+                        _visual =
+                            '<div id="' + _carouselId + '" class="carousel slide carousel-fade shadow-lg rounded" data-bs-ride="carousel" style="border: 1px solid var(--glass-border); overflow: hidden;">' +
+                                '<div class="carousel-inner">' + _slides + '</div>' +
+                                '<button class="carousel-control-prev" type="button" data-bs-target="#' + _carouselId + '" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>' +
+                                '<button class="carousel-control-next" type="button" data-bs-target="#' + _carouselId + '" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>' +
+                            '</div>';
+                    } else if (_fotolar.length === 1) {
+                        _visual = '<img src="/static/' + _fotolar[0] + '" class="w-100 rounded shadow-sm" style="max-height:260px; object-fit:cover;" alt="' + _proj.baslik + '">';
+                    } else {
+                        _visual = '<div class="p-4 border rounded text-center" style="background: var(--btn-bg); border-color: var(--btn-border) !important;"><i class="fas fa-diagram-project fa-4x" style="color:#7c3aed;"></i></div>';
+                    }
 
                     var _linkBtn = _proj.link
                         ? '<a href="' + _proj.link + '" target="_blank" class="btn btn-primary fw-bold mt-3"><i class="fas fa-arrow-up-right-from-square me-2"></i>' + (isEn ? 'View' : 'İncele') + '</a>'
