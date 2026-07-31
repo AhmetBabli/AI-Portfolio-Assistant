@@ -15,6 +15,11 @@ sirlar.py
 
 instance/
 static/uploads/
+*.db
+*.db-journal
+
+# Log dosyaları
+*.log
 
 # VS Code ayarları
 .vscode/
