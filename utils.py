@@ -83,9 +83,12 @@ def get_projects(use_cache: bool = True) -> list:
     try:
         projeler = [
             {
+                'id':          p.id,
                 'baslik':      p.baslik,
                 'teknolojiler': p.teknolojiler,
                 'aciklama':    p.aciklama,
+                'link':        p.link,
+                'gorsel':      p.gorsel,
             }
             for p in Project.query.all()
         ]
@@ -101,9 +104,11 @@ def get_projects(use_cache: bool = True) -> list:
 
 
 def format_projects_for_prompt(projeler: list) -> str:
-    """Dict listesini LLM promptuna uygun metne çevirir."""
+    """Dict listesini LLM promptuna uygun metne çevirir. [ID:x] etiketi, LLM'in
+    özel bir kartı olmayan projeler için doğru 'proje_<id>' gorsel slug'ını
+    seçebilmesi içindir — cevap metninde asla gösterilmemeli."""
     return "\n".join([
-        f"- {p['baslik']} ({p['teknolojiler']}): {p['aciklama']}"
+        f"- [ID:{p['id']}] {p['baslik']} ({p['teknolojiler']}): {p['aciklama']}"
         for p in projeler
     ])
 

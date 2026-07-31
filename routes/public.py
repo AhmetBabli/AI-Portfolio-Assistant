@@ -3,6 +3,7 @@ import time
 from flask import Blueprint, render_template, session, current_app
 from models import Setting
 from extensions import db
+from utils import get_projects
 
 public_bp = Blueprint('public', __name__)
 
@@ -34,4 +35,4 @@ def home():
             current_app.logger.warning("Ziyaret sayacı güncellenemedi: %s", e)
             db.session.rollback()
 
-    return render_template('index.html')
+    return render_template('index.html', projeler=get_projects(use_cache=True))

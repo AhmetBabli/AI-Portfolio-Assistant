@@ -77,7 +77,13 @@
         .prompt-chip { background: var(--chip-bg, white); border: 1px solid var(--chip-border, #cbd5e1); color: var(--text-main); padding: 8px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; white-space: nowrap; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .prompt-chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
         .prompt-chip.chip-highlight { background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(59,130,246,0.1)); border-color: rgba(37,99,235,0.4); color: var(--accent); font-weight: 600; }
-        
+        .prompt-chip .sub-chevron { font-size: 0.65rem; margin-left: 2px; opacity: 0.6; transition: transform 0.2s; }
+        .prompt-chip.has-sub.open { border-color: var(--accent); color: var(--accent); }
+        .prompt-chip.has-sub.open .sub-chevron { transform: rotate(180deg); }
+        .quick-prompts.sub-prompts { padding-top: 6px; border-top: none; max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease; }
+        .quick-prompts.sub-prompts.open { max-height: 60px; opacity: 1; padding-bottom: 2px; }
+        .prompt-chip.sub { background: transparent; border-style: dashed; font-size: 0.76rem; opacity: 0.9; }
+
         .chat-input-area { padding: 15px 20px; background: transparent; }
         .input-wrapper { background: var(--input-bg, white) !important; border-radius: 16px; padding: 5px 5px 5px 15px; display: flex; align-items: center; border: 1px solid var(--input-border, #e2e8f0) !important; }
         input { flex: 1; border: none; background: transparent; color: var(--input-text, var(--text-main)); outline: none; font-size: 0.95rem; }
@@ -397,10 +403,17 @@
 
             <div class="quick-prompts" id="quickPrompts">
                 <div class="prompt-chip chip-highlight" onclick="hizliSor(this, 'Ahmet Babli Çulcu hakkında her şeyi anlat. Eğitimi, projeleri, yetenekleri ve kariyer hedefleri neler?')"><i class="fas fa-user-tie me-1"></i> <span class="chip-label">Ahmet'i Tanı</span></div>
-                <div class="prompt-chip" onclick="hizliSor(this, 'TrikoPatron ERP projesi nedir? Detaylı anlat.')"><i class="fas fa-box-open me-1"></i> <span class="chip-label">TrikoPatron</span></div>
+                <div class="prompt-chip has-sub" onclick="toggleSubPrompts('projeler', this)"><i class="fas fa-layer-group me-1"></i> <span class="chip-label">Projeler</span> <i class="fas fa-chevron-down sub-chevron"></i></div>
                 <div class="prompt-chip" onclick="hizliSor(this, 'Hangi yazılım dillerini ve teknolojileri kullanıyor?')"><i class="fas fa-code me-1"></i> <span class="chip-label">Yetenekler</span></div>
                 <div class="prompt-chip" onclick="hizliSor(this, 'İletişim bilgileri nelerdir?')"><i class="fas fa-envelope me-1"></i> <span class="chip-label">İletişim</span></div>
                 <div class="prompt-chip" onclick="hizliSor(this, 'Sistemi bana tanıt. Sırdaş nedir?')"><i class="fas fa-wand-magic-sparkles me-1"></i> <span class="chip-label">Site Turu</span></div>
+            </div>
+
+            <div class="quick-prompts sub-prompts" id="subPrompts-projeler">
+                <div class="prompt-chip sub" onclick="hizliSor(this, 'TrikoPatron ERP projesi nedir? Detaylı anlat.')"><i class="fas fa-box-open me-1"></i> <span class="chip-label">TrikoPatron</span></div>
+                <div class="prompt-chip sub" onclick="hizliSor(this, 'Cihan Mermer projesi nedir? Detaylı anlat, canlı adresini de ver.')"><i class="fas fa-gem me-1"></i> <span class="chip-label">Cihan Mermer</span></div>
+                <div class="prompt-chip sub" onclick="hizliSor(this, 'Yoklama Sistemi projesi nedir? Detaylı anlat.')"><i class="fas fa-microphone-alt me-1"></i> <span class="chip-label">Yoklama Sistemi</span></div>
+                <div class="prompt-chip sub" onclick="hizliSor(this, 'Ahmet\'in tüm projelerini kısaca sırala.')"><i class="fas fa-list-ul me-1"></i> <span class="chip-label">Tümünü Listele</span></div>
             </div>
 
             <div class="chat-input-area">
@@ -497,6 +510,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // ── Admin panelinden eklenen projeler (jenerik proje_<id> kartları için) ──
+        window.SIRDAS_PROJECTS = {{ projeler | tojson }};
+
         // ── Spline 3D — Masaüstü için yükle ve hata durumunu kontrol et ─────────
         (function() {
             // Mobilde 0px render (WebGL crash) sorununu önlemek için spline'ı hiç yükleme
@@ -628,9 +644,16 @@
                 // Hızlı Çip çevirileri
                 var chips = document.getElementById('quickPrompts').querySelectorAll('.chip-label');
                 var chipTexts = isEn
-                    ? ['Meet Ahmet', 'TrikoPatron', 'Skills', 'Contact', 'Site Tour']
-                    : ["Ahmet'i Tanı", 'TrikoPatron', 'Yetenekler', 'İletişim', 'Site Turu'];
+                    ? ['Meet Ahmet', 'Projects', 'Skills', 'Contact', 'Site Tour']
+                    : ["Ahmet'i Tanı", 'Projeler', 'Yetenekler', 'İletişim', 'Site Turu'];
                 chips.forEach(function(el, i) { if(chipTexts[i]) el.textContent = chipTexts[i]; });
+
+                // Alt (proje) çip çevirileri
+                var subChips = document.getElementById('subPrompts-projeler').querySelectorAll('.chip-label');
+                var subChipTexts = isEn
+                    ? ['TrikoPatron', 'Cihan Mermer', 'Attendance System', 'List All']
+                    : ['TrikoPatron', 'Cihan Mermer', 'Yoklama Sistemi', 'Tümünü Listele'];
+                subChips.forEach(function(el, i) { if(subChipTexts[i]) el.textContent = subChipTexts[i]; });
 
                 // AI Asistan ilk karşılama mesajını da anlık çevir
                 var firstMsg = document.querySelector('#messages .msg.ai');
@@ -655,15 +678,26 @@
             if(isEn) {
                 if(soru.includes("Ahmet Babli")) finalQuestion = "Tell me everything about Ahmet Babli Çulcu — his education, projects, skills and career goals.";
                 if(soru.includes("TrikoPatron ERP")) finalQuestion = "What is the TrikoPatron ERP project? Give me the details.";
+                if(soru.includes("Cihan Mermer")) finalQuestion = "What is the Cihan Mermer project? Give me the details and the live site address.";
+                if(soru.includes("Yoklama Sistemi")) finalQuestion = "What is the Yoklama Sistemi (attendance system) project? Give me the details.";
+                if(soru.includes("tüm projelerini")) finalQuestion = "Briefly list all of Ahmet's projects.";
                 if(soru.includes("Hangi yazılım")) finalQuestion = "What programming languages and technologies does he use?";
                 if(soru.includes("İletişim bilgileri")) finalQuestion = "What is his contact information?";
                 if(soru.includes("Sistemi bana tanıt")) finalQuestion = "Introduce the system to me. What is Sırdaş?";
             }
-            
+
             document.getElementById('userInput').value = finalQuestion;
             sendMessage();
-            
+
             if (element) { element.style.display = 'none'; }
+        }
+
+        // ── İç İçe Hızlı Sorular (Kategori → Alt Sorular) ──────────────────────
+        function toggleSubPrompts(key, btnEl) {
+            var sub = document.getElementById('subPrompts-' + key);
+            if (!sub) return;
+            var isOpen = sub.classList.toggle('open');
+            if (btnEl) btnEl.classList.toggle('open', isOpen);
         }
 
         function togglePageTheme() {
@@ -840,6 +874,7 @@
                                     '<p class="mb-2"><strong><i class="fas fa-microchip text-primary me-2"></i>' + (isEn ? 'Technologies' : 'Teknoloji') + ':</strong> Python, Flask, Nginx, Gunicorn</p>' +
                                     '<p class="mb-0 text-muted" style="font-size: 0.9rem; color: var(--text-sub) !important;"><i class="fas fa-check-circle text-success me-2"></i>' + (isEn ? 'Product / gallery / price management, cost calculator, WhatsApp quote integration.' : 'Ürün/galeri/fiyat yönetimi, maliyet hesaplayıcı, WhatsApp teklif entegrasyonu.') + '</p>' +
                                 '</div>' +
+                                '<a href="https://cihanmer.com.tr" target="_blank" class="btn btn-success fw-bold mt-3"><i class="fas fa-arrow-up-right-from-square me-2"></i>' + (isEn ? 'Visit Live Site' : 'Canlı Siteyi Gör') + '</a>' +
                             '</div>' +
                             '<div class="col-md-6 mt-4 mt-md-0">' +
                                 '<div id="cihanCarousel" class="carousel slide carousel-fade shadow-lg rounded" data-bs-ride="carousel" style="border: 1px solid var(--glass-border); overflow: hidden;">' +
@@ -877,6 +912,41 @@
                             '</div>' +
                         '</div>' +
                     '</div>';
+            }
+            else if (gorsel && gorsel.indexOf('proje_') === 0) {
+                var _m = gorsel.match(/^proje_(\d+)$/);
+                var _proj = _m ? (window.SIRDAS_PROJECTS || []).find(function(p) { return String(p.id) === _m[1]; }) : null;
+
+                if (_proj) {
+                    var _teknoBadges = (_proj.teknolojiler || '')
+                        .split(',')
+                        .map(function(t) { return t.trim(); })
+                        .filter(Boolean)
+                        .map(function(t) { return '<span class="badge me-1 mb-1" style="background: var(--chip-bg); color: var(--accent); border: 1px solid var(--chip-border);">' + t + '</span>'; })
+                        .join('');
+
+                    var _visual = _proj.gorsel
+                        ? '<img src="/static/' + _proj.gorsel + '" class="w-100 rounded shadow-sm" style="max-height:260px; object-fit:cover;" alt="' + _proj.baslik + '">'
+                        : '<div class="p-4 border rounded text-center" style="background: var(--btn-bg); border-color: var(--btn-border) !important;"><i class="fas fa-diagram-project fa-4x" style="color:#7c3aed;"></i></div>';
+
+                    var _linkBtn = _proj.link
+                        ? '<a href="' + _proj.link + '" target="_blank" class="btn btn-primary fw-bold mt-3"><i class="fas fa-arrow-up-right-from-square me-2"></i>' + (isEn ? 'View' : 'İncele') + '</a>'
+                        : '';
+
+                    stage.innerHTML =
+                        '<div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">' +
+                            '<div class="row align-items-center">' +
+                                '<div class="col-md-6">' +
+                                    '<span class="badge mb-2 px-3 py-2 shadow-sm" style="background: linear-gradient(135deg, #2563eb, #7c3aed); color: white;">' + (isEn ? 'Project' : 'Proje') + '</span>' +
+                                    '<h2 style="font-weight: 800; color: var(--text-main);">' + _proj.baslik + '</h2>' +
+                                    '<p class="mt-3 text-muted" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-sub) !important;">' + (_proj.aciklama || '') + '</p>' +
+                                    '<div class="mt-3">' + _teknoBadges + '</div>' +
+                                    _linkBtn +
+                                '</div>' +
+                                '<div class="col-md-6 mt-4 mt-md-0">' + _visual + '</div>' +
+                            '</div>' +
+                        '</div>';
+                }
             }
             // idle veya bilinmeyen görsel türlerinde varsayılan sahneyi koru
         }

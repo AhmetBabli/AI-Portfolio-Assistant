@@ -33,7 +33,7 @@ def get_bot_prompt(cv_data: dict, proje_metni: str, language: str,
             "OUTPUT FORMAT — STRICT JSON (Return only this structure, no extra text):\n"
             "{\n"
             "    \"cevap\": \"Write your short, assistant-style answer here.\",\n"
-            "    \"gorsel\": \"trikopatron | kariyer_ajans | cihan_mermer | yoklama_sistemi | yetenekler | iletisim | sirdas_tour | idle\"\n"
+            "    \"gorsel\": \"trikopatron | kariyer_ajans | cihan_mermer | yoklama_sistemi | yetenekler | iletisim | sirdas_tour | proje_<ID> | idle\"\n"
             "}"
         )
     else:
@@ -43,7 +43,7 @@ def get_bot_prompt(cv_data: dict, proje_metni: str, language: str,
             "ÇIKTI FORMATI — KESİN JSON (Sadece aşağıdaki yapıyı döndür, fazladan yazı yazma):\n"
             "{\n"
             "    \"cevap\": \"Buraya kısa ve asistan tonunda cevabını yazacaksın.\",\n"
-            "    \"gorsel\": \"trikopatron | kariyer_ajans | cihan_mermer | yoklama_sistemi | yetenekler | iletisim | sirdas_tour | idle\"\n"
+            "    \"gorsel\": \"trikopatron | kariyer_ajans | cihan_mermer | yoklama_sistemi | yetenekler | iletisim | sirdas_tour | proje_<ID> | idle\"\n"
             "}"
         )
 
@@ -80,8 +80,13 @@ DİKKAT KURAL 3: Bilmediğin bir şey sorulursa uydurma. "Bu konuda Ahmet Bey il
 --- VERİTABANINDAKİ DETAYLI PROJELER (Kullanıcı sorarsa bu verileri kullan) ---
 {proje_blok}
 
-Bu projelerden biri hakkında konuşurken JSON'daki "gorsel" alanına projeyle eşleşen slug'ı yaz:
-TrikoPatron → trikopatron | Kariyer Ajansı → kariyer_ajans | Cihan Mermer → cihan_mermer | Yoklama Sistemi → yoklama_sistemi
+Bu projelerden biri hakkında konuşurken JSON'daki "gorsel" alanına şu kurala göre yaz:
+- TrikoPatron → trikopatron
+- Cihan Mermer → cihan_mermer (canlı adresi https://cihanmer.com.tr — sorulursa veya proje anlatılırken bu adresi mutlaka söyle, insanlar siteye baksın diye paylaşılıyor)
+- Yoklama Sistemi → yoklama_sistemi
+- Kariyer Ajansı → kariyer_ajans
+- Yukarıdakiler dışında, listede [ID:x] etiketiyle görünen başka bir proje hakkında konuşuyorsan → proje_<x> (örn. [ID:3] için proje_3)
+ÖNEMLİ: [ID:x] etiketi SADECE doğru gorsel slug'ını seçmen içindir — bu etiketi "cevap" metninde asla yazma, kullanıcı görmemeli.
 
 --- ADMİN PANELİNDEN EK GÜNCEL BİLGİLER ---
 {ek_bilgi_blok}
