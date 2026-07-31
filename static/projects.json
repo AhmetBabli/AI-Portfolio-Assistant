@@ -10,5 +10,17 @@
         "teknolojiler": "Google Gemini API, Flask, JavaScript",
         "aciklama": "Kullanıcı duygu analizine göre etkileşim kuran akıllı portfolyo asistanı.",
         "link": "github.com/AhmetBabli"
+    },
+    {
+        "baslik": "Cihan Mermer",
+        "teknolojiler": "Python, Flask, Nginx, Gunicorn",
+        "aciklama": "Mermer satışı ve işçilik hizmetleri veren bir işletme için müşteri sitesi ve şifre korumalı yönetim paneli. Ürün/galeri/fiyat yönetimi, maliyet hesaplayıcı ve WhatsApp üzerinden teklif entegrasyonu içerir. Canlı adres: https://cihanmer.com.tr",
+        "link": "https://cihanmer.com.tr"
+    },
+    {
+        "baslik": "Yoklama Sistemi",
+        "teknolojiler": "Python, FastAPI, Next.js, React, TypeScript",
+        "aciklama": "İmza veya QR yerine ses biyometrisiyle öğrenci kimlik doğrulaması yapan bir üniversite yoklama sistemi. Resemblyzer (Google GE2E) ile konuşmacı doğrulama, faster-whisper ile anti-spoofing (replay saldırısı) koruması. Öğretmen için canlı oturum yönetimi, öğrenci için mobil uyumlu panel içerir.",
+        "link": "https://github.com/AhmetBabli/Yoklama-Sistemi"
     }
 ]

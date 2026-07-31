@@ -37,11 +37,19 @@ def create_app():
     limiter.init_app(app)
 
     # Veritabanı tablolarının otomatik oluşturulmasını sağla (Canlı ortamda tablo yoksa hata vermemesi için)
+    # NOT: models.py burada import edilmeden db.create_all() hiçbir tablo oluşturmaz —
+    # SQLAlchemy metadata'sı o modeller import edilmeden boş kalır.
     with app.app_context():
         try:
+            import models  # noqa: F401 — create_all()'ın tabloları görebilmesi için gerekli
             db.create_all()
         except Exception as e:
             app.logger.warning("Veritabanı tabloları oluşturulurken hata: %s", e)
+
+    # Ephemeral dosya sisteminde her deploy'da veri kaybolabildiği için,
+    # admin kullanıcısını ve varsayılan projeleri her başlangıçta güvenle yeniden tohumla.
+    from seed import seed_database
+    seed_database(app, db)
 
     # Not: extensions.py içinde bunları zaten tanımlamıştık, 
     # burada kalması veya oradan yönetilmesi tamamen senin yoğurt yiyişine kalmış akhi.
