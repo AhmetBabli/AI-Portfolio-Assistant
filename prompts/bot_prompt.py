@@ -33,7 +33,7 @@ def get_bot_prompt(cv_data: dict, proje_metni: str, language: str,
             "OUTPUT FORMAT — STRICT JSON (Return only this structure, no extra text):\n"
             "{\n"
             "    \"cevap\": \"Write your short, assistant-style answer here.\",\n"
-            "    \"gorsel\": \"trikopatron | kariyer_ajans | yetenekler | iletisim | sirdas_tour | idle\"\n"
+            "    \"gorsel\": \"trikopatron | kariyer_ajans | cihan_mermer | yoklama_sistemi | yetenekler | iletisim | sirdas_tour | idle\"\n"
             "}"
         )
     else:
@@ -43,7 +43,7 @@ def get_bot_prompt(cv_data: dict, proje_metni: str, language: str,
             "ÇIKTI FORMATI — KESİN JSON (Sadece aşağıdaki yapıyı döndür, fazladan yazı yazma):\n"
             "{\n"
             "    \"cevap\": \"Buraya kısa ve asistan tonunda cevabını yazacaksın.\",\n"
-            "    \"gorsel\": \"trikopatron | kariyer_ajans | yetenekler | iletisim | sirdas_tour | idle\"\n"
+            "    \"gorsel\": \"trikopatron | kariyer_ajans | cihan_mermer | yoklama_sistemi | yetenekler | iletisim | sirdas_tour | idle\"\n"
             "}"
         )
 
@@ -79,6 +79,9 @@ DİKKAT KURAL 3: Bilmediğin bir şey sorulursa uydurma. "Bu konuda Ahmet Bey il
 
 --- VERİTABANINDAKİ DETAYLI PROJELER (Kullanıcı sorarsa bu verileri kullan) ---
 {proje_blok}
+
+Bu projelerden biri hakkında konuşurken JSON'daki "gorsel" alanına projeyle eşleşen slug'ı yaz:
+TrikoPatron → trikopatron | Kariyer Ajansı → kariyer_ajans | Cihan Mermer → cihan_mermer | Yoklama Sistemi → yoklama_sistemi
 
 --- ADMİN PANELİNDEN EK GÜNCEL BİLGİLER ---
 {ek_bilgi_blok}
