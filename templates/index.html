@@ -751,6 +751,38 @@
             applyPageTheme(saved || sys);
         })();
 
+        // ── Admin panelinden yüklenen fotoğrafları görsel HTML'e çevirir ───────
+        // Virgülle ayrılmış birden fazla foto varsa carousel, tek foto varsa img,
+        // hiç foto yoksa null döner (çağıran taraf kendi varsayılanını kullanır).
+        function _buildVisualHtml(gorselStr, altText, slideIdPrefix) {
+            var fotolar = (gorselStr || '').split(',').map(function(g) { return g.trim(); }).filter(Boolean);
+            if (fotolar.length > 1) {
+                var cid = slideIdPrefix + Math.random().toString(36).slice(2, 8);
+                var slides = fotolar.map(function(g, i) {
+                    return '<div class="carousel-item' + (i === 0 ? ' active' : '') + '"><img src="/static/' + g + '" class="d-block w-100" style="max-height:260px; object-fit:cover;" alt="' + altText + '"></div>';
+                }).join('');
+                return '<div id="' + cid + '" class="carousel slide carousel-fade shadow-lg rounded" data-bs-ride="carousel" style="border: 1px solid var(--glass-border); overflow: hidden;">' +
+                    '<div class="carousel-inner">' + slides + '</div>' +
+                    '<button class="carousel-control-prev" type="button" data-bs-target="#' + cid + '" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>' +
+                    '<button class="carousel-control-next" type="button" data-bs-target="#' + cid + '" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>' +
+                '</div>';
+            }
+            if (fotolar.length === 1) {
+                return '<img src="/static/' + fotolar[0] + '" class="w-100 rounded shadow-sm" style="max-height:260px; object-fit:cover;" alt="' + altText + '">';
+            }
+            return null;
+        }
+
+        // Admin panelinden eklenen projeler arasında başlığa göre arar (örn. 'cihan mermer').
+        function _findProject(substr) {
+            var list = window.SIRDAS_PROJECTS || [];
+            substr = substr.toLowerCase();
+            for (var i = 0; i < list.length; i++) {
+                if ((list[i].baslik || '').toLowerCase().indexOf(substr) !== -1) return list[i];
+            }
+            return null;
+        }
+
         // ── Dinamik Sahne Güncelleme ─────────────────────────────────────────
         function updateStage(gorsel, isEn) {
             var stage = document.getElementById('portfolioDisplay');
@@ -785,6 +817,19 @@
                 driverObj.drive();
             }
             else if(gorsel === 'trikopatron') {
+                var _trikoDefaultCarousel =
+                    '<div id="trikoCarousel" class="carousel slide carousel-fade shadow-lg rounded" data-bs-ride="carousel" style="border: 1px solid var(--glass-border); overflow: hidden;">' +
+                        '<div class="carousel-inner">' +
+                            '<div class="carousel-item active"><img src="/static/images/triko1.png" class="d-block w-100" alt="Screen 1"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Secure Login' : 'Güvenli Yönetici Girişi') + '</h6></div></div>' +
+                            '<div class="carousel-item"><img src="/static/images/triko2.png" class="d-block w-100" alt="Screen 2"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Dashboard Panel' : 'Sipariş Takip Paneli') + '</h6></div></div>' +
+                            '<div class="carousel-item"><img src="/static/images/triko3.png" class="d-block w-100" alt="Screen 3"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'PDF Reports' : 'PDF Raporlama & Fiş') + '</h6></div></div>' +
+                        '</div>' +
+                        '<button class="carousel-control-prev" type="button" data-bs-target="#trikoCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>' +
+                        '<button class="carousel-control-next" type="button" data-bs-target="#trikoCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>' +
+                    '</div>';
+                var _trikoProj = _findProject('trikopatron');
+                var _trikoVisual = (_trikoProj && _buildVisualHtml(_trikoProj.gorsel, 'TrikoPatron', 'trikoCarouselUp')) || _trikoDefaultCarousel;
+
                 stage.innerHTML =
                     '<div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">' +
                         '<div class="row align-items-center">' +
@@ -797,17 +842,7 @@
                                     '<p class="mb-0 text-muted" style="font-size: 0.9rem; color: var(--text-sub) !important;"><i class="fas fa-check-circle text-success me-2"></i>' + (isEn ? 'Order and stock integration.' : 'Sipariş ve stok entegrasyonu.') + '</p>' +
                                 '</div>' +
                             '</div>' +
-                            '<div class="col-md-6 mt-4 mt-md-0">' +
-                                '<div id="trikoCarousel" class="carousel slide carousel-fade shadow-lg rounded" data-bs-ride="carousel" style="border: 1px solid var(--glass-border); overflow: hidden;">' +
-                                    '<div class="carousel-inner">' +
-                                        '<div class="carousel-item active"><img src="/static/images/triko1.png" class="d-block w-100" alt="Screen 1"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Secure Login' : 'Güvenli Yönetici Girişi') + '</h6></div></div>' +
-                                        '<div class="carousel-item"><img src="/static/images/triko2.png" class="d-block w-100" alt="Screen 2"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Dashboard Panel' : 'Sipariş Takip Paneli') + '</h6></div></div>' +
-                                        '<div class="carousel-item"><img src="/static/images/triko3.png" class="d-block w-100" alt="Screen 3"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'PDF Reports' : 'PDF Raporlama & Fiş') + '</h6></div></div>' +
-                                    '</div>' +
-                                    '<button class="carousel-control-prev" type="button" data-bs-target="#trikoCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>' +
-                                    '<button class="carousel-control-next" type="button" data-bs-target="#trikoCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>' +
-                                '</div>' +
-                            '</div>' +
+                            '<div class="col-md-6 mt-4 mt-md-0">' + _trikoVisual + '</div>' +
                         '</div>' +
                     '</div>';
             }
@@ -863,6 +898,19 @@
                     '</div>';
             }
             else if(gorsel === 'cihan_mermer') {
+                var _cihanDefaultCarousel =
+                    '<div id="cihanCarousel" class="carousel slide carousel-fade shadow-lg rounded" data-bs-ride="carousel" style="border: 1px solid var(--glass-border); overflow: hidden;">' +
+                        '<div class="carousel-inner">' +
+                            '<div class="carousel-item active"><img src="/static/images/cihan-hero.jpg" class="d-block w-100" alt="Cihan Mermer"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Storefront' : 'Vitrin Sayfası') + '</h6></div></div>' +
+                            '<div class="carousel-item"><img src="/static/images/cihan-bathroom.jpg" class="d-block w-100" alt="Referans"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Reference Work' : 'Referans Uygulama') + '</h6></div></div>' +
+                            '<div class="carousel-item"><img src="/static/images/cihan-kitchen.jpg" class="d-block w-100" alt="Referans"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Reference Work' : 'Referans Uygulama') + '</h6></div></div>' +
+                        '</div>' +
+                        '<button class="carousel-control-prev" type="button" data-bs-target="#cihanCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>' +
+                        '<button class="carousel-control-next" type="button" data-bs-target="#cihanCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>' +
+                    '</div>';
+                var _cihanProj = _findProject('cihan mermer');
+                var _cihanVisual = (_cihanProj && _buildVisualHtml(_cihanProj.gorsel, 'Cihan Mermer', 'cihanCarouselUp')) || _cihanDefaultCarousel;
+
                 stage.innerHTML =
                     '<div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">' +
                         '<div class="row align-items-center">' +
@@ -876,21 +924,20 @@
                                 '</div>' +
                                 '<a href="https://cihanmer.com.tr" target="_blank" class="btn btn-success fw-bold mt-3"><i class="fas fa-arrow-up-right-from-square me-2"></i>' + (isEn ? 'Visit Live Site' : 'Canlı Siteyi Gör') + '</a>' +
                             '</div>' +
-                            '<div class="col-md-6 mt-4 mt-md-0">' +
-                                '<div id="cihanCarousel" class="carousel slide carousel-fade shadow-lg rounded" data-bs-ride="carousel" style="border: 1px solid var(--glass-border); overflow: hidden;">' +
-                                    '<div class="carousel-inner">' +
-                                        '<div class="carousel-item active"><img src="/static/images/cihan-hero.jpg" class="d-block w-100" alt="Cihan Mermer"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Storefront' : 'Vitrin Sayfası') + '</h6></div></div>' +
-                                        '<div class="carousel-item"><img src="/static/images/cihan-bathroom.jpg" class="d-block w-100" alt="Referans"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Reference Work' : 'Referans Uygulama') + '</h6></div></div>' +
-                                        '<div class="carousel-item"><img src="/static/images/cihan-kitchen.jpg" class="d-block w-100" alt="Referans"><div class="carousel-caption d-none d-md-block" style="background: var(--carousel-caption-bg); border-radius: 8px; padding: 5px; bottom: 10px;"><h6 class="mb-0 text-white" style="font-weight:600; font-size:0.85rem;">' + (isEn ? 'Reference Work' : 'Referans Uygulama') + '</h6></div></div>' +
-                                    '</div>' +
-                                    '<button class="carousel-control-prev" type="button" data-bs-target="#cihanCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>' +
-                                    '<button class="carousel-control-next" type="button" data-bs-target="#cihanCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>' +
-                                '</div>' +
-                            '</div>' +
+                            '<div class="col-md-6 mt-4 mt-md-0">' + _cihanVisual + '</div>' +
                         '</div>' +
                     '</div>';
             }
             else if(gorsel === 'yoklama_sistemi') {
+                var _yoklamaDefaultVisual =
+                    '<div class="p-4 border rounded shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;">' +
+                        '<i class="fas fa-wave-square fa-4x mb-3" style="color: #7c3aed;"></i>' +
+                        '<h5 style="font-weight: 700; color: var(--text-main);">' + (isEn ? 'Voice-Verified' : 'Sesle Doğrulanan') + '</h5>' +
+                        '<p class="text-muted mb-0" style="font-size: 0.85rem; color: var(--text-sub) !important;">Resemblyzer + faster-whisper + FastAPI</p>' +
+                    '</div>';
+                var _yoklamaProj = _findProject('yoklama');
+                var _yoklamaVisual = (_yoklamaProj && _buildVisualHtml(_yoklamaProj.gorsel, 'Yoklama Sistemi', 'yoklamaCarouselUp')) || _yoklamaDefaultVisual;
+
                 stage.innerHTML =
                     '<div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">' +
                         '<div class="row align-items-center">' +
@@ -903,13 +950,7 @@
                                     '<p class="mb-0 text-muted" style="font-size: 0.9rem; color: var(--text-sub) !important;"><i class="fas fa-check-circle text-success me-2"></i>' + (isEn ? 'Speaker verification via Resemblyzer, anti-spoofing via faster-whisper.' : 'Resemblyzer ile konuşmacı doğrulama, faster-whisper ile anti-spoofing.') + '</p>' +
                                 '</div>' +
                             '</div>' +
-                            '<div class="col-md-5 mt-4 mt-md-0 text-center">' +
-                                '<div class="p-4 border rounded shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;">' +
-                                    '<i class="fas fa-wave-square fa-4x mb-3" style="color: #7c3aed;"></i>' +
-                                    '<h5 style="font-weight: 700; color: var(--text-main);">' + (isEn ? 'Voice-Verified' : 'Sesle Doğrulanan') + '</h5>' +
-                                    '<p class="text-muted mb-0" style="font-size: 0.85rem; color: var(--text-sub) !important;">Resemblyzer + faster-whisper + FastAPI</p>' +
-                                '</div>' +
-                            '</div>' +
+                            '<div class="col-md-5 mt-4 mt-md-0 text-center">' + _yoklamaVisual + '</div>' +
                         '</div>' +
                     '</div>';
             }
