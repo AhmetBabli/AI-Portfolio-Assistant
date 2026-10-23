@@ -7,7 +7,7 @@
     <meta property="og:title" content="Ahmet Babli Çulcu | Sırdaş AI v3">
     <meta property="og:description" content="Yapay Zeka Destekli Modern Portfolyo & CV Asistanı.">
     <meta property="og:image" content="/static/images/triko1.png">
-    <meta property="og:url" content="https://portfolyo.dev">
+    <meta property="og:url" content="https://ahmetbabli.com.tr">
     <title>Ahmet Babli Çulcu | Sırdaş AI </title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -23,10 +23,10 @@
             --body-overlay: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.4), rgba(9, 13, 22, 0.8));
             --glass-bg: rgba(17, 24, 39, 0.55);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --accent: #3b82f6;
+            --accent: #c4703f;
             --text-main: #f1f5f9;
             --text-sub: #94a3b8;
-            --user-msg: linear-gradient(135deg, #2563eb, #1d4ed8);
+            --user-msg: linear-gradient(135deg, #c4703f, #a85a30);
             --ai-msg: rgba(30, 41, 59, 0.8);
             --chip-bg: rgba(30, 41, 59, 0.6);
             --chip-border: rgba(255, 255, 255, 0.08);
@@ -38,7 +38,7 @@
             --btn-border: rgba(255, 255, 255, 0.08);
             --shadow-color: rgba(0, 0, 0, 0.35);
             --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            --title-color: #60a5fa;
+            --title-color: #e0a878;
             --carousel-caption-bg: rgba(15, 23, 42, 0.85);
             --body-fallback: #090d16;
         }
@@ -63,6 +63,25 @@
         .chat-side { pointer-events: auto; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: var(--card-shadow); display: flex; flex-direction: column; overflow: hidden; }
         .chat-header { padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: center; align-items: center; }
         .chat-header h5 { margin: 0; font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; color: var(--title-color); }
+        /* Site imzası: logodaki mavi→mor degradeyi (sirdas-logo.svg) yumuşak bir
+           nabız olarak Sırdaş'ın "canlı/dinliyor" hissini veren tek unsura
+           taşıyoruz — Ahmet'in diğer projelerinde de kullandığımız aynı dil. */
+        .sirdas-logo-halo { position: relative; display: inline-flex; flex-shrink: 0; }
+        .sirdas-logo-halo::before {
+            content: ''; position: absolute; inset: -6px; border-radius: 14px;
+            background: linear-gradient(135deg, #c4703f, #8a4a2a);
+            opacity: 0.35; filter: blur(6px);
+            animation: sirdas-pulse 2.6s ease-in-out infinite;
+        }
+        .sirdas-logo-halo img { position: relative; z-index: 1; display: block; }
+        .sirdas-logo-halo-lg::before { inset: -12px; border-radius: 22px; }
+        @keyframes sirdas-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.35; }
+            50% { transform: scale(1.22); opacity: 0.05; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .sirdas-logo-halo::before { animation: none; opacity: 0.2; }
+        }
         #messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
         #messages::-webkit-scrollbar { width: 6px; }
         #messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -88,7 +107,7 @@
         .input-wrapper { background: var(--input-bg, white) !important; border-radius: 16px; padding: 5px 5px 5px 15px; display: flex; align-items: center; border: 1px solid var(--input-border, #e2e8f0) !important; }
         input { flex: 1; border: none; background: transparent; color: var(--input-text, var(--text-main)); outline: none; font-size: 0.95rem; }
         .send-btn { background: var(--accent); color: white; border: none; width: 40px; height: 40px; border-radius: 12px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-        .send-btn:hover { transform: scale(1.05); background: #1d4ed8; }
+        .send-btn:hover { transform: scale(1.05); background: #a85a30; }
         .bottom-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.8rem; }
         .lang-toggle { font-weight: 600; cursor: pointer; color: var(--text-sub); }
         .lang-toggle span.active { color: var(--accent); }
@@ -101,7 +120,7 @@
         .idle-content { pointer-events: auto; background: var(--stage-card-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--stage-card-border); border-radius: 24px; padding: 40px; box-shadow: var(--card-shadow); width: 100%; max-width: 800px; margin: 0 auto; transition: all 0.4s ease; color: var(--text-main); }
         
         .driver-popover { font-family: 'Inter', sans-serif; border-radius: 16px; padding: 20px; }
-        .driver-popover-title { font-weight: 700; color: #2563eb; font-size: 1.1rem; }
+        .driver-popover-title { font-weight: 700; color: #c4703f; font-size: 1.1rem; }
         .driver-popover-description { color: #475569; font-size: 0.95rem; line-height: 1.5; }
 
         /* Logo pulse animation */
@@ -390,7 +409,9 @@
         
         <section class="chat-side" id="tour-chat">
             <div class="chat-header">
-                <img src="/static/images/sirdas-logo.svg" class="sirdas-logo" width="32" height="32" style="margin-right: 10px; flex-shrink: 0;" alt="Sırdaş">
+                <span class="sirdas-logo-halo" style="margin-right: 10px;">
+                    <img src="/static/images/sirdas-logo.svg" class="sirdas-logo" width="32" height="32" alt="Sırdaş">
+                </span>
                 <h5 style="margin: 0;">SIRDAŞ AI <span style="font-size: 0.7rem; opacity: 0.6; font-weight: 400;">v3</span></h5>
             </div>
 
@@ -442,7 +463,7 @@
 
             <div class="dynamic-stage" id="portfolioDisplay">
                 <div class="idle-content text-center">
-                    <img src="/static/images/sirdas-logo.svg" class="idle-logo-svg sirdas-logo" alt="Sırdaş">
+                    <span class="sirdas-logo-halo sirdas-logo-halo-lg"><img src="/static/images/sirdas-logo.svg" class="idle-logo-svg sirdas-logo" alt="Sırdaş"></span>
                     <h1 style="font-weight: 800; font-size: 2.5rem; letter-spacing: -1px; color: var(--text-main);">AHMET BABLİ ÇULCU</h1>
                     <p style="color: var(--text-sub); font-size: 1.1rem;" id="idle-desc">Yönetim Bilişim Sistemleri & Python/Flask Geliştiricisi</p>
                     <p class="text-muted mt-4" style="font-size: 0.9rem; color: var(--text-sub) !important;" id="idle-sub"><i class="fas fa-wand-magic-sparkles me-2"></i>Sırdaş'a proje sorun, analiz grafikleri ve sistem detayları burada görüntülensin.</p>
@@ -453,13 +474,13 @@
         <!-- ── Mobil Bağlantılar Sekmesi ────────────────────────────────── -->
         <section class="mobile-links-section" id="mobileLinksSection">
             <div style="text-align: center; margin-bottom: 8px;">
-                <img src="/static/images/sirdas-logo.svg" class="idle-logo-svg sirdas-logo" width="48" height="48" alt="Sırdaş">
+                <span class="sirdas-logo-halo sirdas-logo-halo-lg"><img src="/static/images/sirdas-logo.svg" class="idle-logo-svg sirdas-logo" width="48" height="48" alt="Sırdaş"></span>
                 <h2 style="font-weight: 800; font-size: 1.4rem; color: var(--text-main); margin-top: 12px;">AHMET BABLİ ÇULCU</h2>
                 <p style="color: var(--text-sub); font-size: 0.85rem; margin: 4px 0 0 0;" class="lang-text" data-tr="Yönetim Bilişim Sistemleri & Python/Flask Geliştiricisi" data-en="Management Information Systems & Python/Flask Developer">Yönetim Bilişim Sistemleri & Python/Flask Geliştiricisi</p>
             </div>
             <div class="mobile-links-grid">
                 <a href="/yonetici" class="mobile-link-card">
-                    <i class="fas fa-user-shield" style="color: #3b82f6;"></i>
+                    <i class="fas fa-user-shield" style="color: #c4703f;"></i>
                     <span class="lang-text" data-tr="Yönetici Paneli" data-en="Admin Panel">Yönetici Paneli</span>
                 </a>
                 <a href="/static/Ahmet_Babli_CV.pdf" download class="mobile-link-card">
@@ -574,7 +595,7 @@
             var msgDiv = document.createElement("div");
             msgDiv.className = "msg ai";
             msgDiv.style.background = "rgba(37, 99, 235, 0.05)";
-            msgDiv.style.borderLeft = "3px solid #2563eb";
+            msgDiv.style.borderLeft = "3px solid #c4703f";
             msgDiv.style.fontSize = "0.85rem";
             msgDiv.style.padding = "10px";
 
@@ -803,13 +824,13 @@
                     steps: isEn ? [
                         { popover: { title: 'Sırdaş AI v3', description: 'Welcome to the digital portfolio system. Let me show you how this site works.' } },
                         { element: '#tour-admin', popover: { title: 'Admin Panel (Data Center)', description: 'Ahmet manages his profile, skills, and portfolio instantly from this secure area.', side: "bottom", align: 'start' }},
-                        { element: '#tour-cv', popover: { title: 'Auto CV (n8n)', description: 'When data is updated, the n8n automation triggers and generates an instant PDF CV via Google API.', side: "bottom", align: 'start' }},
+                        { element: '#tour-cv', popover: { title: 'Self-Managed CV', description: 'Ahmet uploads a new CV PDF from the admin panel whenever it changes — visitors always get the current version, no redeploy needed.', side: "bottom", align: 'start' }},
                         { element: '#tour-portfolio', popover: { title: 'Dynamic Portfolio Stage', description: 'The era of static pages is over. When you chat with me, projects and graphs are instantly visualized right here.', side: "left", align: 'start' }},
                         { element: '#tour-chat', popover: { title: 'AI Brain (Me)', description: 'I run on Google Gemini Flash architecture. I analyze your questions and manage the stage on the right. Let\'s start chatting!', side: "right", align: 'start' }}
                     ] : [
                         { popover: { title: 'Sırdaş AI v3', description: 'Dijital portfolyo sistemine hoş geldiniz. Şimdi size bu sitenin nasıl çalıştığını göstereceğim.' } },
                         { element: '#tour-admin', popover: { title: 'Yönetici Paneli (Veri Merkezi)', description: 'Ahmet Bey profilini, yeteneklerini ve portfolyosunu bu güvenli alandan anlık olarak yönetir.', side: "bottom", align: 'start' }},
-                        { element: '#tour-cv', popover: { title: 'Otomatik CV (n8n)', description: 'Ahmet Bey verileri güncellediğinde, n8n otomasyonu devreye girer ve Google API aracılığıyla anlık PDF CV üretir.', side: "bottom", align: 'start' }},
+                        { element: '#tour-cv', popover: { title: 'Kendi Kendini Güncelleyen CV', description: 'Ahmet, CV\'si değiştikçe yeni PDF\'i doğrudan yönetici panelinden yüklüyor — ziyaretçiler her zaman güncel sürümü görüyor, kod değişikliği/yeniden yayınlama gerekmiyor.', side: "bottom", align: 'start' }},
                         { element: '#tour-portfolio', popover: { title: 'Dinamik Portfolyo Sahnesi', description: 'Statik sayfalar devri bitti. Benimle sohbet ettiğinizde projeler ve grafikler tam burada görselleştirilir.', side: "left", align: 'start' }},
                         { element: '#tour-chat', popover: { title: 'Yapay Zeka Beyni (Ben)', description: 'Ben Google Gemini Flash mimarisiyle çalışıyorum. Sorularınızı analiz eder ve sağdaki sahneyi ben yönetirim. Hadi başlayalım!', side: "right", align: 'start' }}
                     ]
@@ -851,20 +872,20 @@
                     '<div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">' +
                         '<div class="row align-items-center">' +
                             '<div class="col-md-7">' +
-                                '<span class="badge mb-2 px-3 py-2 shadow-sm" style="background: linear-gradient(135deg, #2563eb, #7c3aed); color: white;">' + (isEn ? 'Active Project' : 'Aktif Proje') + '</span>' +
-                                '<h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-rocket" style="color: #7c3aed;"></i> ' + (isEn ? 'Career Agency' : 'Kariyer Ajansı') + '</h2>' +
-                                '<p class="mt-3" style="font-size: 1.05rem; line-height: 1.7; color: var(--text-sub);">' + (isEn ? 'AI-powered career automation platform with real-time job scraping, personalized recommendations, and n8n workflow integration.' : 'Yapay zeka destekli kariyer otomasyon platformu. Gerçek zamanlı iş ilanı toplama, kişiselleştirilmiş öneriler ve n8n iş akışı entegrasyonu.') + '</p>' +
+                                '<span class="badge mb-2 px-3 py-2 shadow-sm" style="background: linear-gradient(135deg, #c4703f, #8a4a2a); color: white;">' + (isEn ? 'Active Project' : 'Aktif Proje') + '</span>' +
+                                '<h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-rocket" style="color: #a85a30;"></i> Pusula</h2>' +
+                                '<p class="mt-3" style="font-size: 1.05rem; line-height: 1.7; color: var(--text-sub);">' + (isEn ? 'AI-powered career assistant: scans job postings across multiple platforms, matches them to your CV with Gemini AI, drafts cover letters, and sends applications from your own Gmail with your approval. Multi-user, security-audited.' : 'Yapay zeka destekli kariyer asistanı: birden çok platformdan iş ilanı tarıyor, Gemini AI ile CV\'ne göre eşleşme skoru çıkarıyor, motivasyon mektubu yazıyor ve senin onayınla kendi Gmail hesabından başvuru gönderiyor. Çok kullanıcılı, güvenlik denetiminden geçmiş.') + '</p>' +
                                 '<div class="mt-4 p-3 border rounded shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;">' +
-                                    '<p class="mb-2"><strong><i class="fas fa-microchip text-primary me-2"></i>' + (isEn ? 'Stack' : 'Teknoloji') + ':</strong> Python, Flask, React, n8n, Playwright</p>' +
-                                    '<p class="mb-2"><strong><i class="fas fa-globe text-info me-2"></i>' + (isEn ? 'Status' : 'Durum') + ':</strong> <span class="badge bg-success">' + (isEn ? 'Live on Domain' : 'Canlı Yayında') + '</span></p>' +
+                                    '<p class="mb-2"><strong><i class="fas fa-microchip text-primary me-2"></i>' + (isEn ? 'Stack' : 'Teknoloji') + ':</strong> Python, FastAPI, React, TypeScript, Gemini AI</p>' +
+                                    '<p class="mb-2"><strong><i class="fas fa-globe text-info me-2"></i>' + (isEn ? 'Status' : 'Durum') + ':</strong> <span class="badge bg-primary">' + (isEn ? 'In Development' : 'Geliştirme Aşamasında') + '</span></p>' +
                                     '<p class="mb-0 text-muted" style="font-size: 0.9rem; color: var(--text-sub) !important;"><i class="fas fa-check-circle text-success me-2"></i>' + (isEn ? 'Full-stack development by Ahmet.' : 'Frontend ve backend tamamen Ahmet tarafından geliştirildi.') + '</p>' +
                                 '</div>' +
                             '</div>' +
                             '<div class="col-md-5 mt-4 mt-md-0 text-center">' +
                                 '<div class="p-4 border rounded shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;">' +
-                                    '<i class="fas fa-robot fa-4x mb-3" style="color: #7c3aed;"></i>' +
+                                    '<i class="fas fa-robot fa-4x mb-3" style="color: #a85a30;"></i>' +
                                     '<h5 style="font-weight: 700; color: var(--text-main);">' + (isEn ? 'AI-Powered' : 'Yapay Zeka Destekli') + '</h5>' +
-                                    '<p class="text-muted mb-0" style="font-size: 0.85rem; color: var(--text-sub) !important;">Gemini API + Playwright + n8n</p>' +
+                                    '<p class="text-muted mb-0" style="font-size: 0.85rem; color: var(--text-sub) !important;">Gemini API + FastAPI + JWT Auth</p>' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -915,14 +936,14 @@
                     '<div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">' +
                         '<div class="row align-items-center">' +
                             '<div class="col-md-6">' +
-                                '<span class="badge bg-success mb-2 px-3 py-2 shadow-sm">' + (isEn ? 'Live Client Project' : 'Canlı Müşteri Projesi') + '</span>' +
+                                '<span class="badge bg-secondary mb-2 px-3 py-2 shadow-sm">' + (isEn ? 'Client Project' : 'Müşteri Projesi') + '</span>' +
                                 '<h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-gem text-success"></i> Cihan Mermer</h2>' +
                                 '<p class="mt-3 text-muted" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-sub) !important;">' + (isEn ? 'Customer-facing website and password-protected admin panel for a marble sales and craftsmanship business.' : 'Mermer satışı ve işçilik hizmetleri veren bir işletme için müşteri sitesi ve şifre korumalı yönetim paneli.') + '</p>' +
                                 '<div class="mt-4 p-3 border rounded shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;">' +
                                     '<p class="mb-2"><strong><i class="fas fa-microchip text-primary me-2"></i>' + (isEn ? 'Technologies' : 'Teknoloji') + ':</strong> Python, Flask, Nginx, Gunicorn</p>' +
                                     '<p class="mb-0 text-muted" style="font-size: 0.9rem; color: var(--text-sub) !important;"><i class="fas fa-check-circle text-success me-2"></i>' + (isEn ? 'Product / gallery / price management, cost calculator, WhatsApp quote integration.' : 'Ürün/galeri/fiyat yönetimi, maliyet hesaplayıcı, WhatsApp teklif entegrasyonu.') + '</p>' +
                                 '</div>' +
-                                '<a href="https://cihanmer.com.tr" target="_blank" class="btn btn-success fw-bold mt-3"><i class="fas fa-arrow-up-right-from-square me-2"></i>' + (isEn ? 'Visit Live Site' : 'Canlı Siteyi Gör') + '</a>' +
+                                '<p class="mt-3 mb-0" style="font-size: 0.82rem; color: var(--text-sub) !important;"><i class="fas fa-circle-pause me-2"></i>' + (isEn ? 'Currently paused — screenshots above show the live version.' : 'Şu an geçici olarak durduruldu — yukarıdaki görseller canlı sürümden.') + '</p>' +
                             '</div>' +
                             '<div class="col-md-6 mt-4 mt-md-0">' + _cihanVisual + '</div>' +
                         '</div>' +
@@ -931,7 +952,7 @@
             else if(gorsel === 'yoklama_sistemi') {
                 var _yoklamaDefaultVisual =
                     '<div class="p-4 border rounded shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;">' +
-                        '<i class="fas fa-wave-square fa-4x mb-3" style="color: #7c3aed;"></i>' +
+                        '<i class="fas fa-wave-square fa-4x mb-3" style="color: #a85a30;"></i>' +
                         '<h5 style="font-weight: 700; color: var(--text-main);">' + (isEn ? 'Voice-Verified' : 'Sesle Doğrulanan') + '</h5>' +
                         '<p class="text-muted mb-0" style="font-size: 0.85rem; color: var(--text-sub) !important;">Resemblyzer + faster-whisper + FastAPI</p>' +
                     '</div>';
@@ -942,8 +963,8 @@
                     '<div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">' +
                         '<div class="row align-items-center">' +
                             '<div class="col-md-7">' +
-                                '<span class="badge mb-2 px-3 py-2 shadow-sm" style="background: linear-gradient(135deg, #2563eb, #7c3aed); color: white;">' + (isEn ? 'Independent Project' : 'Bağımsız Proje') + '</span>' +
-                                '<h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-microphone-alt" style="color: #7c3aed;"></i> ' + (isEn ? 'Attendance System' : 'Yoklama Sistemi') + '</h2>' +
+                                '<span class="badge mb-2 px-3 py-2 shadow-sm" style="background: linear-gradient(135deg, #c4703f, #8a4a2a); color: white;">' + (isEn ? 'Independent Project' : 'Bağımsız Proje') + '</span>' +
+                                '<h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-microphone-alt" style="color: #a85a30;"></i> ' + (isEn ? 'Attendance System' : 'Yoklama Sistemi') + '</h2>' +
                                 '<p class="mt-3" style="font-size: 1.05rem; line-height: 1.7; color: var(--text-sub);">' + (isEn ? 'A university attendance system that verifies student identity through voice biometrics instead of signatures or QR codes, with anti-spoofing protection against replay attacks.' : 'İmza veya QR yerine ses biyometrisiyle öğrenci kimlik doğrulaması yapan bir yoklama sistemi; replay saldırılarına karşı anti-spoofing koruması içerir.') + '</p>' +
                                 '<div class="mt-4 p-3 border rounded shadow-sm" style="background: var(--btn-bg); border-color: var(--btn-border) !important;">' +
                                     '<p class="mb-2"><strong><i class="fas fa-microchip text-primary me-2"></i>' + (isEn ? 'Stack' : 'Teknoloji') + ':</strong> Python, FastAPI, Next.js, React, TypeScript</p>' +
@@ -982,7 +1003,7 @@
                     } else if (_fotolar.length === 1) {
                         _visual = '<img src="/static/' + _fotolar[0] + '" class="w-100 rounded shadow-sm" style="max-height:260px; object-fit:cover;" alt="' + _proj.baslik + '">';
                     } else {
-                        _visual = '<div class="p-4 border rounded text-center" style="background: var(--btn-bg); border-color: var(--btn-border) !important;"><i class="fas fa-diagram-project fa-4x" style="color:#7c3aed;"></i></div>';
+                        _visual = '<div class="p-4 border rounded text-center" style="background: var(--btn-bg); border-color: var(--btn-border) !important;"><i class="fas fa-diagram-project fa-4x" style="color:#a85a30;"></i></div>';
                     }
 
                     var _linkBtn = _proj.link
@@ -993,7 +1014,7 @@
                         '<div class="idle-content text-start" style="animation: fadeIn 0.5s ease-in-out;">' +
                             '<div class="row align-items-center">' +
                                 '<div class="col-md-6">' +
-                                    '<span class="badge mb-2 px-3 py-2 shadow-sm" style="background: linear-gradient(135deg, #2563eb, #7c3aed); color: white;">' + (isEn ? 'Project' : 'Proje') + '</span>' +
+                                    '<span class="badge mb-2 px-3 py-2 shadow-sm" style="background: linear-gradient(135deg, #c4703f, #8a4a2a); color: white;">' + (isEn ? 'Project' : 'Proje') + '</span>' +
                                     '<h2 style="font-weight: 800; color: var(--text-main);">' + _proj.baslik + '</h2>' +
                                     '<p class="mt-3 text-muted" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-sub) !important;">' + (_proj.aciklama || '') + '</p>' +
                                     '<div class="mt-3">' + _teknoBadges + '</div>' +

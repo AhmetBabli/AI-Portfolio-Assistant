@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
   <defs>
     <linearGradient id="sirdas-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2563eb"/>
-      <stop offset="100%" stop-color="#7c3aed"/>
+      <stop offset="0%" stop-color="#c4703f"/>
+      <stop offset="100%" stop-color="#8a4a2a"/>
     </linearGradient>
   </defs>
   <!-- Badge -->
