@@ -12,10 +12,16 @@
         "link": "github.com/AhmetBabli"
     },
     {
+        "baslik": "Pusula",
+        "teknolojiler": "Python, FastAPI, React, TypeScript, Gemini AI",
+        "aciklama": "Staj/iş başvuru sürecini uçtan uca otomatikleştiren yapay zeka destekli kariyer asistanı. Birden çok platformdan iş ilanı tarıyor, Gemini AI ile CV'ye göre eşleşme skoru çıkarıyor, motivasyon mektubu yazıyor ve kullanıcının onayıyla kendi Gmail hesabından başvuru gönderiyor. Çok kullanıcılı, JWT tabanlı kimlik doğrulama, güvenlik denetiminden geçmiş.",
+        "link": ""
+    },
+    {
         "baslik": "Cihan Mermer",
         "teknolojiler": "Python, Flask, Nginx, Gunicorn",
-        "aciklama": "Mermer satışı ve işçilik hizmetleri veren bir işletme için müşteri sitesi ve şifre korumalı yönetim paneli. Ürün/galeri/fiyat yönetimi, maliyet hesaplayıcı ve WhatsApp üzerinden teklif entegrasyonu içerir. Canlı adres: https://cihanmer.com.tr",
-        "link": "https://cihanmer.com.tr"
+        "aciklama": "Mermer satışı ve işçilik hizmetleri veren bir işletme için müşteri sitesi ve şifre korumalı yönetim paneli. Ürün/galeri/fiyat yönetimi, maliyet hesaplayıcı ve WhatsApp üzerinden teklif entegrasyonu içerir. Şu an geçici olarak çevrimdışı.",
+        "link": ""
     },
     {
         "baslik": "Yoklama Sistemi",

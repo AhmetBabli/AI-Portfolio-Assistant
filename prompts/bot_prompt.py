@@ -84,7 +84,7 @@ Bu projelerden biri hakkında konuşurken JSON'daki "gorsel" alanına şu kurala
 - TrikoPatron → trikopatron
 - Cihan Mermer → cihan_mermer (canlı adresi https://cihanmer.com.tr — sorulursa veya proje anlatılırken bu adresi mutlaka söyle, insanlar siteye baksın diye paylaşılıyor)
 - Yoklama Sistemi → yoklama_sistemi
-- Kariyer Ajansı → kariyer_ajans
+- Pusula → kariyer_ajans
 - Yukarıdakiler dışında, listede [ID:x] etiketiyle görünen başka bir proje hakkında konuşuyorsan → proje_<x> (örn. [ID:3] için proje_3)
 ÖNEMLİ: [ID:x] etiketi SADECE doğru gorsel slug'ını seçmen içindir — bu etiketi "cevap" metninde asla yazma, kullanıcı görmemeli.
 
